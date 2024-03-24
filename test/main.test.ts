@@ -1,11 +1,7 @@
-import { sum } from "../src/main";
+import consumer from "../src/main";
 
-test("Deve somar corretamente", function(){
-    const result = sum(2,2);
-    expect(result).toBe(4); 
-});
+test("Should return email", function(){
+    const register = new consumer("pedro prata", "12345678901", "pedro@prata", "12345678")
 
-test("Should return zero when params is negative", function(){
-    const result = sum(-2,-2);
-    expect(result).toBe(0); 
-});
+    expect(register.getEmail()).toBe("pedro@prata")
+})
