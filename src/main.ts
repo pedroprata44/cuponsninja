@@ -1,6 +1,8 @@
-export function sum (a: number, b: number){
-    if (a < 0 || b < 0) {
-        return 0;
+export default class consumer{
+    constructor(readonly name:string, readonly cpf:string, readonly email:string, readonly phone:string){
     }
-    return a + b; 
+
+    getEmail(){
+        return this.email
+    }
 }
