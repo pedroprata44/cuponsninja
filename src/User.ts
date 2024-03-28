@@ -24,4 +24,18 @@ export default class User{
         if(!validEmail){throw new Error("Invalid email")}
         if(!validPhone){throw new Error("Invalid phone")}
     }
+
+    validCpf(cpf:string){
+        let isValid:boolean = true
+
+        if(!cpf)isValid = false
+        if(!(cpf.length === 11))isValid = false
+        if(!this.sameDigits) isValid = false
+
+        return isValid
+    }
+
+    sameDigits(cpf:string){
+        return !(cpf.split("").every(c => c === cpf[0]))
+    }
 }
