@@ -19,9 +19,9 @@ export default class User{
         const validEmail:boolean = !(!this.email || !this.email.includes("@"))
         const validPhone:boolean = !(!this.phone || this.phone.length !== 8)
 
-        if(!validName){throw new Error("Name invalid")}
-        else if(!validCpf){throw new Error("Cpf invalid")}
-        else if(!validEmail){throw new Error("Email invalid")}
-        else if(!validPhone){throw new Error("Phone invalid")}
+        if(!validName){throw new Error("Invalid name")}
+        if(!validCpf){throw new Error("Invalid cpf")}
+        if(!validEmail){throw new Error("Invalid email")}
+        if(!validPhone){throw new Error("Invalid phone")}
     }
 }
