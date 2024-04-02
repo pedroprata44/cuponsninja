@@ -1,8 +1,9 @@
-export default class consumer{
-    constructor(readonly name:string, readonly cpf:string, readonly email:string, readonly phone:string){
-    }
+import User from "./User";
 
-    getEmail(){
-        return this.email
-    }
+let registerUsers: User[] = []
+export {registerUsers}
+
+export default function signUp(user:User){
+    registerUsers.push(user)
+    return registerUsers.slice(-1)
 }
