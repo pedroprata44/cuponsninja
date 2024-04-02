@@ -3,7 +3,7 @@ import User from "../src/User";
 test.each([""])("Should not create user with invalid name", function(name:any){
     expect(()=> new User("","12345678901","user@user","12345678")).toThrow("Invalid name")
 })
-test.each(["", "123456789012", "123456789"])("Should not create user with invalid cpf", function(cpf: any){
+test.each(["", "123456789012", "123456789", "11111111111"])("Should not create user with invalid cpf", function(cpf: any){
     expect(()=> new User("user", cpf, "user@user", "12345678")).toThrow("Invalid cpf")
 })
 test.each(["", "user.user"])("Should not create user with invalid email", function(email:any){
