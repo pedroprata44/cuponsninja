@@ -21,14 +21,18 @@ export default class User{
     }
     isValidCpf(cpf:string){
         if(!cpf) return false
-        cpf.replace(/\D/g, "")
+        cpf = this.cleanCpf(cpf)
         if(cpf.length !== 11) return false
         if(this.isSameDigits(this.cpf)) return false
         const digit1 = this.calculateDigit(this.cpf, 10)
         const digit2 = this.calculateDigit(this.cpf, 11)
-        let nDigVerific = cpf.substring(cpf.length - 2, cpf.length)
-        const nDigResult = "" + digit1 + "" + digit2
-        return nDigVerific == nDigResult
+        return this.extractCheckDigit(cpf) === `${digit1}${digit2}`
+    }
+    extractCheckDigit(cpf:string){
+        return cpf.slice(9)
+    }
+    cleanCpf(cpf:string){
+        return cpf.replace(/\D/g,"");
     }
     isSameDigits(cpf:string){
         return cpf.split("").every(c => c === cpf[0])
