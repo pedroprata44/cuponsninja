@@ -46,9 +46,9 @@ export default class User{
         return (rest < 2) ? 0 : 11 - rest
     }
     isValidEmail(email:string){
-        return !(!this.email || !this.email.includes("@"))
+        return !(!email || !email.includes("@"))
     }
     isValidPhone(phone:string){
-        return !(!this.phone || this.phone.length !== 8)
+        return !(!phone || phone.length !== 8)
     }
 }
