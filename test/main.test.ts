@@ -1,9 +1,10 @@
-import User from "../src/User"
-import signUp, { registerUsers } from "../src/main"
+import { signUp } from "../src/main";
 
-test("Should return the last user added in the list", function(){
-    
-    const user = new User("user", "39780909028", "user@user", "12345678")
-    
-    expect(signUp(user)).toStrictEqual(registerUsers.slice(-1))
+test("Should not do signup with a email already exists", function(){
+    const inputSignup = {name:"user", cpf:"12345678901", email:"user@user", phone:"123456789"}
+    expect(() => signUp(inputSignup)).toThrow(new Error("This email already exists"))
+})
+test.each([""])("Should not do signup with a invalid name", function(name:string){
+    const inputSignup = {name:name, cpf:"12345678901", email:"@", phone:"123456789"}
+    expect(() => signUp(inputSignup)).toThrow(new Error("Invalid name"))
 })
