@@ -17,22 +17,46 @@ export function signUp(input: any){
     }
     if(isInvalidName(input.name)) throw new Error("Invalid name")
     if(isInvalidEmail(input.email)) throw new Error("Invalid email")
-    if(isInvalidCpf(input.cpf)) throw new Error("Invalid cpf")
+    if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
+    if(input.isCompany && !validadeCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+}
+
+function validadeCnpj(cnpj:string){
+    if(!cnpj) return false
+    if(isInvalidLengthCnpj(cnpj)) return false
+}
+
+function isInvalidLengthCnpj(cnpj:string){
+    return cnpj.length !== 14
 }
 
 function isInvalidName(name:string){return !name.match(/[a-zA-Z] [a-zA-Z]+/);}
 
 function isInvalidEmail(email:string){return !email.match(/^(.+)@(.+)$/);}
 
-function isInvalidCpf(cpf:string){
+function validateCpf(cpf:string){
     if(!cpf) return false
     cpf = clean(cpf)
-    if(isInvalidLength(cpf)) return false
+    if(isInvalidLengthCpf(cpf)) return false
     if(allDigitsAreTheSame(cpf)) return false
+    const dg1 = calculateDigit(cpf, 10)
+    const dg2 = calculateDigit(cpf, 11)
+    return extractCheckDigit(cpf) === `${dg1}${dg2}`
+}
+
+function extractCheckDigit(cpf: string){return cpf.slice(9)}
+
+function calculateDigit(cpf:string, factor:number){
+    let total = 0
+    for(const digit of cpf){
+        if(factor > 1) total += parseInt(digit) * factor--
+    }
+    const rest = total%11
+    return (rest < 2) ? 0 : 11 - rest
 }
 
 function allDigitsAreTheSame(cpf:string){return cpf.split("").every(c => c === cpf[0])}
 
-function isInvalidLength(cpf: string){return cpf.length !== 11}
+function isInvalidLengthCpf(cpf: string){return cpf.length !== 11}
 
 function clean(cpf:string){return cpf.replace(/\D/g, "")}
