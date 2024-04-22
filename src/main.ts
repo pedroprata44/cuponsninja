@@ -25,10 +25,39 @@ function validadeCnpj(cnpj:string){
     if(!cnpj) return false
     if(isInvalidLengthCnpj(cnpj)) return false
     if(allDigitsAreTheSame(cnpj)) return false
+    const dg1 = calculateDigitCnpj(cnpj,1)
+    const dg2 = calculateDigitCnpj(cnpj,2)
+    return extractCheckDigit(false, cnpj) === `${dg1}${dg2}`
 }
 
-function calculateDigitCnpj(cnpj:string){
-    return 0
+function calculateDigitCnpj(cnpj:string, factor:number){
+    let digit
+    if(factor === 1){
+        const ordersFactor1 = [5,4,3,2,9,9,7,6,5,4,3,2]
+        let index = 0
+        let total = 0
+        for(const order of ordersFactor1){
+            if(index > 10) break 
+            total += order * parseInt(cnpj[index])
+            index++
+        }
+        const rest = total % (index + 1)
+        if(rest < 2) digit = 0
+        else digit = 11 - rest
+    } else  if(factor === 2){
+        const ordersFactor2 = [6,5,4,3,2,9,8,7,6,5,4,3,2]
+        let index = 0
+        let total = 0
+        for(const order of ordersFactor2){
+            if(index > 11) break
+            total += order * parseInt(cnpj[index])
+            index++
+        }
+        const rest = total % (index + 1)
+        if(rest < 2) digit = 0
+        else digit = 11 - rest
+    }
+    return digit
 }
 
 function isInvalidLengthCnpj(cnpj:string){
@@ -46,10 +75,13 @@ function validateCpf(cpf:string){
     if(allDigitsAreTheSame(cpf)) return false
     const dg1 = calculateDigitCpf(cpf, 10)
     const dg2 = calculateDigitCpf(cpf, 11)
-    return extractCheckDigit(cpf) === `${dg1}${dg2}`
+    return extractCheckDigit(true, cpf) === `${dg1}${dg2}`
 }
 
-function extractCheckDigit(cpf: string){return cpf.slice(9)}
+function extractCheckDigit(isCpf: boolean, digits:string){
+    if(isCpf) return digits.slice(9)
+    return digits.slice(12)
+}
 
 function calculateDigitCpf(cpf:string, factor:number){
     let total = 0
