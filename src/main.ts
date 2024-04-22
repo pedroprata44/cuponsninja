@@ -24,6 +24,11 @@ export function signUp(input: any){
 function validadeCnpj(cnpj:string){
     if(!cnpj) return false
     if(isInvalidLengthCnpj(cnpj)) return false
+    if(allDigitsAreTheSame(cnpj)) return false
+}
+
+function calculateDigitCnpj(cnpj:string){
+    return 0
 }
 
 function isInvalidLengthCnpj(cnpj:string){
@@ -39,14 +44,14 @@ function validateCpf(cpf:string){
     cpf = clean(cpf)
     if(isInvalidLengthCpf(cpf)) return false
     if(allDigitsAreTheSame(cpf)) return false
-    const dg1 = calculateDigit(cpf, 10)
-    const dg2 = calculateDigit(cpf, 11)
+    const dg1 = calculateDigitCpf(cpf, 10)
+    const dg2 = calculateDigitCpf(cpf, 11)
     return extractCheckDigit(cpf) === `${dg1}${dg2}`
 }
 
 function extractCheckDigit(cpf: string){return cpf.slice(9)}
 
-function calculateDigit(cpf:string, factor:number){
+function calculateDigitCpf(cpf:string, factor:number){
     let total = 0
     for(const digit of cpf){
         if(factor > 1) total += parseInt(digit) * factor--
@@ -55,7 +60,7 @@ function calculateDigit(cpf:string, factor:number){
     return (rest < 2) ? 0 : 11 - rest
 }
 
-function allDigitsAreTheSame(cpf:string){return cpf.split("").every(c => c === cpf[0])}
+function allDigitsAreTheSame(digits:string){return digits.split("").every(c => c === digits[0])}
 
 function isInvalidLengthCpf(cpf: string){return cpf.length !== 11}
 
