@@ -18,10 +18,10 @@ export function signUp(input: any){
     if(isInvalidName(input.name)) throw new Error("Invalid name")
     if(isInvalidEmail(input.email)) throw new Error("Invalid email")
     if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
-    if(input.isCompany && !validadeCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+    if(input.isCompany && !validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
 }
 
-function validadeCnpj(cnpj:string){
+function validateCnpj(cnpj:string){
     if(!cnpj) return false
     cnpj = clean(cnpj)
     if(isInvalidLengthCnpj(cnpj)) return false
