@@ -23,6 +23,7 @@ export function signUp(input: any){
 
 function validadeCnpj(cnpj:string){
     if(!cnpj) return false
+    cnpj = clean(cnpj)
     if(isInvalidLengthCnpj(cnpj)) return false
     if(allDigitsAreTheSame(cnpj)) return false
     const dg1 = calculateDigitCnpj(cnpj,1)
@@ -96,4 +97,4 @@ function allDigitsAreTheSame(digits:string){return digits.split("").every(c => c
 
 function isInvalidLengthCpf(cpf: string){return cpf.length !== 11}
 
-function clean(cpf:string){return cpf.replace(/\D/g, "")}
+function clean(digits:string){return digits.replace(/\D/g, "")}
