@@ -5,12 +5,27 @@ interface user{
     cpf:string
     email:string
     phone:string
+    id:string
 }
-
 const users: user[] = []
-users.push({name:"user", cpf:"12345678901", email:"user@user", phone:"123456789"})
+users.push({name:"user", cpf:"12345678901", email:"user@user", phone:"123456789", id: crypto.randomUUID()})
+
+interface company{
+    name:string
+    cnpj:string
+    email:string
+    phone:string
+    id:string
+}
+const companys: company[] = []
+companys.push({name:"company", cnpj: "65199380000180", email:"company@company", phone:"123456789", id: crypto.randomUUID()})
 
 export function signUp(input: any){
+    if(input.isCompany) signUpCompany(input)
+    if(!input.isCompany) signUpUser(input)
+}
+
+function signUpUser(input:any){
     const userId = crypto.randomUUID()
     for(const user of users){
         if(input.email === user.email) throw new Error("This email already exists")
@@ -18,7 +33,21 @@ export function signUp(input: any){
     if(isInvalidName(input.name)) throw new Error("Invalid name")
     if(isInvalidEmail(input.email)) throw new Error("Invalid email")
     if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
-    if(input.isCompany && !validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+    if(!isInvalidPhone(input.phone)) throw new Error("Invalid phone")
+    users.push({name:input.name, cpf: input.cpf, email: input.email, phone: input.phone, id: userId})
+    return userId
+}
+
+function signUpCompany(input:any){
+    const companyId = crypto.randomUUID()
+    for(const company of companys){
+        if(input.email == company.email) throw new Error("This email already exists")
+    }
+    if(isInvalidName(input.name)) throw new Error("Invalid name")
+    if(isInvalidEmail(input.email)) throw new Error("Invalid email")
+    if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+    companys.push({name:input.name, cnpj: input.cnpj, email: input.email, phone: input.phone, id: companyId})
+    return companyId
 }
 
 function validateCnpj(cnpj:string){
@@ -77,6 +106,11 @@ function validateCpf(cpf:string){
     const dg1 = calculateDigitCpf(cpf, 10)
     const dg2 = calculateDigitCpf(cpf, 11)
     return extractCheckDigit(true, cpf) === `${dg1}${dg2}`
+}
+
+function isInvalidPhone(phone:string){
+    if(!phone) return false
+    return !(phone.length !== 9)
 }
 
 function extractCheckDigit(isCpf: boolean, digits:string){
