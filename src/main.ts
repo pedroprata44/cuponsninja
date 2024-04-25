@@ -7,7 +7,7 @@ interface user{
     phone:string
     id:string
 }
-const users: user[] = []
+export const users: user[] = []
 users.push({name:"user", cpf:"12345678901", email:"user@user", phone:"123456789", id: crypto.randomUUID()})
 
 interface company{
@@ -25,8 +25,7 @@ export function signUp(input: any){
     if(!input.isCompany) signUpUser(input)
 }
 
-function signUpUser(input:any){
-    const userId = crypto.randomUUID()
+export function signUpUser(input:any){
     for(const user of users){
         if(input.email === user.email) throw new Error("This email already exists")
     }
@@ -34,18 +33,19 @@ function signUpUser(input:any){
     if(isInvalidEmail(input.email)) throw new Error("Invalid email")
     if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
     if(!isInvalidPhone(input.phone)) throw new Error("Invalid phone")
+    const userId = crypto.randomUUID()
     users.push({name:input.name, cpf: input.cpf, email: input.email, phone: input.phone, id: userId})
     return userId
 }
 
 function signUpCompany(input:any){
-    const companyId = crypto.randomUUID()
     for(const company of companys){
         if(input.email == company.email) throw new Error("This email already exists")
     }
     if(isInvalidName(input.name)) throw new Error("Invalid name")
     if(isInvalidEmail(input.email)) throw new Error("Invalid email")
     if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+    const companyId = crypto.randomUUID()
     companys.push({name:input.name, cnpj: input.cnpj, email: input.email, phone: input.phone, id: companyId})
     return companyId
 }
