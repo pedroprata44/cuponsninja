@@ -21,8 +21,8 @@ const companys: company[] = []
 companys.push({name:"company", cnpj: "65199380000180", email:"company@company", phone:"123456789", id: crypto.randomUUID()})
 
 export function signUp(input: any){
-    if(input.isCompany) signUpCompany(input)
-    if(!input.isCompany) signUpUser(input)
+    if(input.isCompany) return signUpCompany(input)
+    if(!input.isCompany) return signUpUser(input)
 }
 
 export function signUpUser(input:any){
@@ -32,7 +32,7 @@ export function signUpUser(input:any){
     if(isInvalidName(input.name)) throw new Error("Invalid name")
     if(isInvalidEmail(input.email)) throw new Error("Invalid email")
     if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
-    if(!isInvalidPhone(input.phone)) throw new Error("Invalid phone")
+    if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
     const userId = crypto.randomUUID()
     users.push({name:input.name, cpf: input.cpf, email: input.email, phone: input.phone, id: userId})
     return userId
@@ -94,9 +94,15 @@ function isInvalidLengthCnpj(cnpj:string){
     return cnpj.length !== 14
 }
 
-function isInvalidName(name:string){return !name.match(/[a-zA-Z] [a-zA-Z]+/);}
+function isInvalidName(name:string){
+    if(!name) return true
+    return !name.match(/[a-zA-Z] [a-zA-Z]+/);
+}
 
-function isInvalidEmail(email:string){return !email.match(/^(.+)@(.+)$/);}
+function isInvalidEmail(email:string){
+    if(!email) return true
+    return !email.match(/^(.+)@(.+)$/);
+}
 
 function validateCpf(cpf:string){
     if(!cpf) return false
@@ -109,8 +115,8 @@ function validateCpf(cpf:string){
 }
 
 function isInvalidPhone(phone:string){
-    if(!phone) return false
-    return !(phone.length !== 9)
+    if(!phone) return true
+    return phone.length !== 9
 }
 
 function extractCheckDigit(isCpf: boolean, digits:string){
