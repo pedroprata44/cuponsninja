@@ -45,6 +45,7 @@ function signUpCompany(input:any){
     if(isInvalidName(input.name)) throw new Error("Invalid name")
     if(isInvalidEmail(input.email)) throw new Error("Invalid email")
     if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+    if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
     const companyId = crypto.randomUUID()
     companys.push({name:input.name, cnpj: input.cnpj, email: input.email, phone: input.phone, id: companyId})
     return companyId
@@ -57,6 +58,7 @@ function validateCnpj(cnpj:string){
     if(allDigitsAreTheSame(cnpj)) return false
     const dg1 = calculateDigitCnpj(cnpj,1)
     const dg2 = calculateDigitCnpj(cnpj,2)
+
     return extractCheckDigit(false, cnpj) === `${dg1}${dg2}`
 }
 
