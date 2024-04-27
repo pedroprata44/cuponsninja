@@ -17,7 +17,7 @@ interface company{
     phone:string
     id:string
 }
-const companys: company[] = []
+export const companys: company[] = []
 companys.push({name:"company", cnpj: "65199380000180", email:"company@company", phone:"123456789", id: crypto.randomUUID()})
 
 export function signUp(input: any){
@@ -56,40 +56,43 @@ function validateCnpj(cnpj:string){
     cnpj = clean(cnpj)
     if(isInvalidLengthCnpj(cnpj)) return false
     if(allDigitsAreTheSame(cnpj)) return false
-    const dg1 = calculateDigitCnpj(cnpj,1)
-    const dg2 = calculateDigitCnpj(cnpj,2)
+    const dg1 = calculateDigitCnpj(cnpj, 1)
+    const dg2 = calculateDigitCnpj(cnpj, 2)
 
     return extractCheckDigit(false, cnpj) === `${dg1}${dg2}`
 }
 
-function calculateDigitCnpj(cnpj:string, factor:number){
-    let digit
-    if(factor === 1){
-        const ordersFactor1 = [5,4,3,2,9,9,7,6,5,4,3,2]
-        let index = 0
+function calculateDigitCnpj(cnpj:string, number:number){
+    if(number === 1){
+        //calculate digit 1
+        const elements = [5,4,3,2,9,8,7,6,5,4,3,2]
         let total = 0
-        for(const order of ordersFactor1){
-            if(index > 10) break 
-            total += order * parseInt(cnpj[index])
-            index++
-        }
-        const rest = total % (index + 1)
-        if(rest < 2) digit = 0
-        else digit = 11 - rest
-    } else  if(factor === 2){
-        const ordersFactor2 = [6,5,4,3,2,9,8,7,6,5,4,3,2]
         let index = 0
-        let total = 0
-        for(const order of ordersFactor2){
-            if(index > 11) break
-            total += order * parseInt(cnpj[index])
-            index++
+        for(const element of elements){
+            if(index < elements.length){
+                total += element * parseInt(cnpj[index])
+                index++
+            }
         }
-        const rest = total % (index + 1)
-        if(rest < 2) digit = 0
-        else digit = 11 - rest
+        let rest = total % 11
+        const digit = rest < 2? 0 : 11 - rest 
+        return digit
     }
-    return digit
+    if(number === 2){
+        //calculate digit 2
+        const elements = [6,5,4,3,2,9,8,7,6,5,4,3,2]
+        let total = 0
+        let index = 0
+        for(const element of elements){
+            if(index < elements.length){
+                total += element * parseInt(cnpj[index])
+                index++
+            }
+        }
+        let rest = total % 11
+        let digit = rest < 2? 0 : 11 - rest
+        return digit
+    }
 }
 
 function isInvalidLengthCnpj(cnpj:string){
