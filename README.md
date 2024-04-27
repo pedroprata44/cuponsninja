@@ -1,5 +1,5 @@
 # Cupons Ninja
-## A fast and security plataform to enjoy coupons discount!
+## A fast and security plataform to enjoy discount coupons!
 
 #### How development?
 1. clone the repository
