@@ -6,9 +6,10 @@ interface user{
     email:string
     phone:string
     id:string
+    dateSignup:Date
 }
 export const users: user[] = []
-users.push({name:"user", cpf:"12345678901", email:"user@user", phone:"123456789", id: crypto.randomUUID()})
+users.push({name:"user", cpf:"12345678901", email:"user@user", phone:"123456789", id: crypto.randomUUID(), dateSignup: new Date()})
 
 interface company{
     name:string
@@ -16,9 +17,13 @@ interface company{
     email:string
     phone:string
     id:string
+    dateSignup:Date
 }
 export const companys: company[] = []
-companys.push({name:"company", cnpj: "65199380000180", email:"company@company", phone:"123456789", id: crypto.randomUUID()})
+companys.push({
+    name: "company", cnpj: "65199380000180", email: "company@company", phone: "123456789", id: crypto.randomUUID(),
+    dateSignup: new Date()
+})
 
 export function signUp(input: any){
     if(input.isCompany) return signUpCompany(input)
@@ -34,7 +39,8 @@ export function signUpUser(input:any){
     if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
     if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
     const userId = crypto.randomUUID()
-    users.push({name:input.name, cpf: input.cpf, email: input.email, phone: input.phone, id: userId})
+    const dateSignup = new Date()
+    users.push({name:input.name, cpf: input.cpf, email: input.email, phone: input.phone, id: userId, dateSignup: dateSignup})
     return userId
 }
 
@@ -47,7 +53,10 @@ function signUpCompany(input:any){
     if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
     if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
     const companyId = crypto.randomUUID()
-    companys.push({name:input.name, cnpj: input.cnpj, email: input.email, phone: input.phone, id: companyId})
+    companys.push({
+        name: input.name, cnpj: input.cnpj, email: input.email, phone: input.phone, id: companyId,
+        dateSignup: new Date()
+    })
     return companyId
 }
 
