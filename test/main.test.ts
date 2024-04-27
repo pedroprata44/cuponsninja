@@ -1,4 +1,4 @@
-import { signUp, users } from "../src/main";
+import { companys, signUp, users } from "../src/main";
 
 //signup user tests
 
@@ -40,10 +40,14 @@ test.each([undefined, null, "", "mate.mate"])("Should not do signup company with
     expect(() => signUp({isCompany:true, email:email, name:"company company"})).toThrow(new Error("Invalid email"))
 })
 
-test.each([undefined, null, "", "111", "11111111111111"])("Should not do signup company with a invalid cnpj", function(cnpj:any){
+test.each([undefined, null, "", "111", "11111111111111", "83800838000155"])("Should not do signup company with a invalid cnpj", function(cnpj:any){
     expect(() => signUp({isCompany:true, email:"mate@mate", name:"company company", cnpj:cnpj})).toThrow("Invalid cnpj")
 })
 
 test.each([undefined, null, "", "123"])("Should not do signup company with a invalid phone", function(phone:any){
     expect(() => signUp({isCompany:true, email:"mate@mate", name: "company company", cnpj:"83800838000197", phone:phone})).toThrow(new Error("Invalid phone"))
+})
+
+test("Should return the correct company id", function(){
+    expect(signUp({isCompany:true, email:"mate@mate", name: "company company", cnpj:"83800838000197", phone:"123456789"})).toBe(companys[companys.length - 1].id)
 })
