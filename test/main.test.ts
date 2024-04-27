@@ -22,8 +22,14 @@ test.each([undefined, null, "", "12345678"])("Should not do signup user with a i
     expect(() => signUp({email:"mate@mate", name: "user user", cpf: "91015490069", phone:phone})).toThrow(new Error("Invalid phone"))
 })
 
-test("Should return the correct user id", function(){
+test("Should return the right user id", function(){
     expect(signUp({email:"mate@mate", name: "user user", cpf: "91015490069", phone: "123456789"})).toBe(users[users.length - 1].id)
+})
+
+test("Should get signup date of user", function(){
+    for(const user of users){
+        expect(user.dateSignup).toBeDefined()
+    }
 })
 
 //signup company tests
@@ -50,4 +56,10 @@ test.each([undefined, null, "", "123"])("Should not do signup company with a inv
 
 test("Should return the correct company id", function(){
     expect(signUp({isCompany:true, email:"mate@mate", name: "company company", cnpj:"83800838000197", phone:"123456789"})).toBe(companys[companys.length - 1].id)
+})
+
+test("Should get signup date of company", function(){
+    for(const company of companys){
+        expect(company.dateSignup).toBeDefined()
+    }
 })
