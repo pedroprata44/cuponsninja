@@ -130,7 +130,7 @@ function validateCpf(cpf:string){
 
 function isInvalidPhone(phone:string){
     if(!phone) return true
-    return phone.length !== 9
+    return !phone.match(/^\([0-9]{2}\) [0-9]{4,5}-[0-9]{4}$/)
 }
 
 function extractCheckDigit(isCpf: boolean, digits:string){
