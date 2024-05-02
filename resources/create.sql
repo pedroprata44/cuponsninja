@@ -10,7 +10,7 @@ create table data.user_account(
     name text not null,
     cpf text not null,
     phone text not null,
-    datecreation date default CURRENT_DATE
+    creationdate date default CURRENT_DATE
 )
 
 select * from data.company_account
