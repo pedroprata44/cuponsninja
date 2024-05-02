@@ -1,5 +1,33 @@
 import crypto from "crypto"
-import pgp from "pg-promise"
+import pgp, { as } from "pg-promise"
+import express, {Request, Response} from "express"
+const app = express()
+
+app.post("/signup",  async function (req: Request, res: Response){
+    const input = req.body
+    const output = await signUp(input)
+    res.json({output})
+})
+
+app.get("/accounts/:accountId", async function(req: Request, res: Response){
+    res.json({})
+})
+
+app.listen(3000)
+
+export async function getAccount(id: string, isCompany: boolean){
+    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
+    if(isCompany){
+        const [company] = await connection.query("select * from data.company_accounts where id = $1", [id])
+        await connection.$pool.end()
+        return company
+    }
+    if(!isCompany){
+        const [user] = await connection.query("select * from data.user_accounts where id = $1", [id])
+        await connection.$pool.end()
+        return user
+    }
+}
 
 interface user{
     name:string
@@ -9,9 +37,6 @@ interface user{
     id:string
     dateSignup:Date
 }
-export const users: user[] = []
-users.push({name:"user user", cpf:"91015490069", email:"user@user", phone:"(99) 9999-9999", id: crypto.randomUUID(), dateSignup: new Date()})
-
 interface company{
     name:string
     cnpj:string
@@ -20,11 +45,6 @@ interface company{
     id:string
     dateSignup:Date
 }
-export const companys: company[] = []
-companys.push({
-    name: "company company", cnpj: "65199380000180", email: "company@company", phone: "(99) 9999-9999", id: crypto.randomUUID(),
-    dateSignup: new Date()
-})
 
 export async function signUp(input: any){
     if(input.isCompany) return signUpCompany(input)
