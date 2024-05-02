@@ -1,4 +1,5 @@
 import crypto from "crypto"
+import pgp from "pg-promise"
 
 interface user{
     name:string
@@ -9,7 +10,7 @@ interface user{
     dateSignup:Date
 }
 export const users: user[] = []
-users.push({name:"user", cpf:"12345678901", email:"user@user", phone:"123456789", id: crypto.randomUUID(), dateSignup: new Date()})
+users.push({name:"user user", cpf:"91015490069", email:"user@user", phone:"(99) 9999-9999", id: crypto.randomUUID(), dateSignup: new Date()})
 
 interface company{
     name:string
@@ -21,43 +22,49 @@ interface company{
 }
 export const companys: company[] = []
 companys.push({
-    name: "company", cnpj: "65199380000180", email: "company@company", phone: "123456789", id: crypto.randomUUID(),
+    name: "company company", cnpj: "65199380000180", email: "company@company", phone: "(99) 9999-9999", id: crypto.randomUUID(),
     dateSignup: new Date()
 })
 
-export function signUp(input: any){
+export async function signUp(input: any){
     if(input.isCompany) return signUpCompany(input)
     if(!input.isCompany) return signUpUser(input)
 }
 
-export function signUpUser(input:any){
-    for(const user of users){
-        if(input.email === user.email) throw new Error("This email already exists")
+export async function signUpUser(input:any){
+    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
+    try{
+        const [user] = await connection.query("select * from data.user_account where email = $1", [input.email])
+        if(user) throw new Error("This email already exists")
+        if(isInvalidName(input.name)) throw new Error("Invalid name")
+        if(isInvalidEmail(input.email)) throw new Error("Invalid email")
+        if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
+        if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
+        const userId = crypto.randomUUID()
+        const dateSignup = new Date()
+        await connection.query("insert into data.user_account (name, email, cpf, phone, id, creationdate) values ($1, $2, $3, $4, $5, $6)", [input.name, input.email, input.cpf, input.phone, userId, dateSignup])
+        return userId
+    } finally{
+        connection.$pool.end()
     }
-    if(isInvalidName(input.name)) throw new Error("Invalid name")
-    if(isInvalidEmail(input.email)) throw new Error("Invalid email")
-    if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
-    if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
-    const userId = crypto.randomUUID()
-    const dateSignup = new Date()
-    users.push({name:input.name, cpf: input.cpf, email: input.email, phone: input.phone, id: userId, dateSignup: dateSignup})
-    return userId
 }
 
-function signUpCompany(input:any){
-    for(const company of companys){
-        if(input.email == company.email) throw new Error("This email already exists")
+async function signUpCompany(input:any){
+    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
+    try{
+        const [company] = await connection.query("select * from data.company_account where email = $1", [input.email])
+        if(company) throw new Error("This email already exists")
+        if(isInvalidName(input.name)) throw new Error("Invalid name")
+        if(isInvalidEmail(input.email)) throw new Error("Invalid email")
+        if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+        if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
+        const companyId = crypto.randomUUID()
+        const dateSignup = new Date()
+        await connection.query("insert into data.company_account (name, email, cnpj, phone, id, datecreation) values ($1, $2, $3, $4, $5, $6)", [input.name, input.email, input.cnpj, input.phone, companyId, dateSignup])
+        return companyId
+    } finally{
+        connection.$pool.end()
     }
-    if(isInvalidName(input.name)) throw new Error("Invalid name")
-    if(isInvalidEmail(input.email)) throw new Error("Invalid email")
-    if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
-    if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
-    const companyId = crypto.randomUUID()
-    companys.push({
-        name: input.name, cnpj: input.cnpj, email: input.email, phone: input.phone, id: companyId,
-        dateSignup: new Date()
-    })
-    return companyId
 }
 
 function validateCnpj(cnpj:string){
