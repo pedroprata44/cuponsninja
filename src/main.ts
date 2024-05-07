@@ -1,31 +1,34 @@
 import crypto from "crypto"
-import pgp, { as } from "pg-promise"
+import pgp from "pg-promise"
 import express, {Request, Response} from "express"
 const app = express()
+app.use(express.json())
 
 app.post("/signup",  async function (req: Request, res: Response){
     const input = req.body
     const output = await signUp(input)
-    res.json({output})
+    res.json(output)
 })
 
-app.get("/accounts/:accountId", async function(req: Request, res: Response){
-    res.json({})
+app.get("/accounts/:id", async function(req: Request, res: Response){
+    const input = req.params.id
+    const output = await getAccount(input)
+    res.json(output)
 })
 
-app.listen(3000)
+//app.listen(3000)
 
-export async function getAccount(id: string, isCompany: boolean){
+export async function getAccount(id:string, isCompany = false){
     const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
-    if(isCompany){
-        const [company] = await connection.query("select * from data.company_accounts where id = $1", [id])
-        await connection.$pool.end()
-        return company
-    }
-    if(!isCompany){
-        const [user] = await connection.query("select * from data.user_accounts where id = $1", [id])
-        await connection.$pool.end()
+    try{
+        if(isCompany){
+            const [company] = await connection.query("select * from data.company_account where id = $1", [id])
+            return company
+        }
+        const [user] = await connection.query("select * from data.user_account where id = $1", [id])
         return user
+    } finally{
+        connection.$pool.end()
     }
 }
 
@@ -46,7 +49,7 @@ interface company{
     dateSignup:Date
 }
 
-export async function signUp(input: any){
+export async function signUp(input: any): Promise<any>{
     if(input.isCompany) return signUpCompany(input)
     if(!input.isCompany) return signUpUser(input)
 }

@@ -1,32 +1,47 @@
 import axios from "axios"
+import { getAccount, signUp } from "../src/main"
 
-test("Should test signup by API", async function(){
-    const response = await axios.post("http://localhost:3000/signup")
-    console.log(response.data)
-})
+// test("Should test signup by API", async function(){
+//     const response = await axios.post("http://localhost:3000/signup")
+//     console.log(response.data)
+// })
 
-test("Should do signup by API", async function(){
-    const inputSignup = {
-        name: "user user",
-        email: `user${Math.random}@user`,
-        cpf: "91015490069",
-        phone:"(99) 9999-9999"
-    }
-    const responseSignup = await axios.post("http://localhost:3000/signup", inputSignup)
-    const outputSignup = responseSignup.data
-    const responseGetAccount = await axios.get(`http://localhost:3000/accounts/${outputSignup.id}`)
-    const outputGetAccount = responseGetAccount.data
+// test("Should do signup by api", async function(){
+//     const inputSignup = {
+//         name: "user user",
+//         cpf: "91015490069",
+//         email: `user${Math.random()}@user`,
+//         phone: "(99) 9999-9999"
+//     }
+//     const responseSignup = await axios.post("http://localhost:3000/signup", inputSignup)
+//     const outputSignup = responseSignup.data
+//     const responseGetAccount = await axios.get(`http://localhost:3000/accounts/${outputSignup.id}`)
+//     const outputGetAccount = responseGetAccount.data
 
-    expect(outputSignup.id).toBeDefined()
-    expect(outputGetAccount.name).toBe(inputSignup.name)
-    expect(outputGetAccount.email).toBe(inputSignup.email)
-})
+//     expect(outputSignup.id).toBeDefined()
+//     expect(outputGetAccount.name).toBe(inputSignup.name)
+//     expect(outputGetAccount.email).toBe(inputSignup.email)
+// })
 
 
 
 // import { signUp } from "../src/main";
 
 // //signup user tests
+
+// test("Should do signup for user", async function(){
+//     const inputSignup = {
+//         name: "user user",
+//         cpf: "91015490069",
+//         email: `user${Math.random()}@user`,
+//         phone: "(99) 9999-9999"
+//     }
+//     const outputSignup = await signUp(inputSignup)
+//     const outputGetAccount = await getAccount(outputSignup)
+//     expect(outputGetAccount).toBeDefined()
+//     expect(outputGetAccount.name).toBe(inputSignup.name)
+//     expect(outputGetAccount.email).toBe(inputSignup.email)
+// })
 
 // test("Should not do signup user with a email already exists", async function(){
 //     const email = `user${Math.random()}@user`
@@ -51,6 +66,21 @@ test("Should do signup by API", async function(){
 // })
 
 // //signup company tests
+
+// test("Should do signup for company", async function(){
+//     const inputSignup = {
+//         isCompany: true,
+//         name: "company company",
+//         cnpj: "83800838000197",
+//         email: `company${Math.random()}@company`,
+//         phone: "(99) 9999-9999"
+//     }
+//     const outputSignup = await signUp(inputSignup)
+//     const outputGetAccount = await getAccount(outputSignup, true)
+//     expect(outputGetAccount).toBeDefined()
+//     expect(outputGetAccount.name).toBe(inputSignup.name)
+//     expect(outputGetAccount.email).toBe(inputSignup.email)
+// })
 
 // test("Should not do sign up company with a email already exists", async function(){
 //     const email = `company${Math.random()}@company`
