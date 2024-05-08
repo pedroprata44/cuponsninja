@@ -10,21 +10,33 @@ app.post("/signup",  async function (req: Request, res: Response){
     res.json(output)
 })
 
-app.get("/accounts/:id", async function(req: Request, res: Response){
+app.get("/accounts/user/:id", async function(req: Request, res: Response){
     const input = req.params.id
-    const output = await getAccount(input)
+    const output = await getUserAccont(input)
     res.json(output)
 })
 
-//app.listen(3000)
+app.get("/accounts/company/:id", async function(req: Request, res: Response){
+    const input = req.params.id
+    const output = await getCompanyAccount(input)
+    res.json(output)
+})
 
-export async function getAccount(id:string, isCompany = false){
+app.listen(3000)
+
+async function getCompanyAccount(id:string){
     const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
     try{
-        if(isCompany){
-            const [company] = await connection.query("select * from data.company_account where id = $1", [id])
-            return company
-        }
+        const [company] = await connection.query("select * from data.company_account where id = $1", [id])
+        return company
+    } finally{
+        connection.$pool.end()
+    }
+}
+
+async function getUserAccont(id:string){
+    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
+    try{
         const [user] = await connection.query("select * from data.user_account where id = $1", [id])
         return user
     } finally{
