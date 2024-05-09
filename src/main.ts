@@ -5,9 +5,15 @@ const app = express()
 app.use(express.json())
 
 app.post("/signup",  async function (req: Request, res: Response){
-    const input = req.body
-    const output = await signUp(input)
-    res.json(output)
+    try{
+        const input = req.body
+        const output = await signUp(input)
+        res.json(output)
+    } catch(e:any){
+        res.status(422).json({
+            message: e.message
+        })
+    }
 })
 
 app.get("/accounts/user/:id", async function(req: Request, res: Response){
@@ -61,12 +67,12 @@ interface company{
     dateSignup:Date
 }
 
-export async function signUp(input: any): Promise<any>{
+async function signUp(input: any): Promise<any>{
     if(input.isCompany) return signUpCompany(input)
     if(!input.isCompany) return signUpUser(input)
 }
 
-export async function signUpUser(input:any){
+async function signUpUser(input:any){
     const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
     try{
         const [user] = await connection.query("select * from data.user_account where email = $1", [input.email])
