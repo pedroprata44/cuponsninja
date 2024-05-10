@@ -1,6 +1,7 @@
 import crypto from "crypto"
 import pgp from "pg-promise"
 import express, {Request, Response} from "express"
+import UserAccountDAO from "./UserAccountDAO"
 const app = express()
 app.use(express.json())
 
@@ -73,20 +74,17 @@ async function signUp(input: any): Promise<any>{
 }
 
 async function signUpUser(input:any){
-    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
-    try{
-        const [user] = await connection.query("select * from data.user_account where email = $1", [input.email])
-        if(user) throw new Error("This email already exists")
-        if(isInvalidName(input.name)) throw new Error("Invalid name")
-        if(isInvalidEmail(input.email)) throw new Error("Invalid email")
-        if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
-        if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
-        const userId = crypto.randomUUID()
-        const dateSignup = new Date()
-        await connection.query("insert into data.user_account (name, email, cpf, phone, id, creationdate) values ($1, $2, $3, $4, $5, $6)", [input.name, input.email, input.cpf, input.phone, userId, dateSignup])
-        return userId
-    } finally{
-        connection.$pool.end()
+    const userDAO = new UserAccountDAO()
+    const user = await userDAO.getByEmail(input.email)
+    if(user) throw new Error("This email already exists")
+    if(isInvalidName(input.name)) throw new Error("Invalid name")
+    if(isInvalidEmail(input.email)) throw new Error("Invalid email")
+    if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
+    if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
+    input.userId = crypto.randomUUID()
+    await userDAO.save(input)
+    return {
+        userId: input.userId
     }
 }
 
