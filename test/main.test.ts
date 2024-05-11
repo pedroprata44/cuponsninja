@@ -12,7 +12,7 @@ test("Do user signup by api", async function(){
     }
     const responseSignup = await axios.post("http://localhost:3000/signup", inputSignup)
     const outputSignup = responseSignup.data
-    const responseGetAccount = await axios.get(`http://localhost:3000/accounts/user/${outputSignup}`)
+    const responseGetAccount = await axios.get(`http://localhost:3000/accounts/user/${outputSignup.userId}`)
     const outputGetAccount = responseGetAccount.data
     expect(outputGetAccount.id).toBeDefined()
     expect(outputGetAccount.name).toBe(inputSignup.name)
