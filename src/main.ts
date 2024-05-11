@@ -42,33 +42,12 @@ async function getCompanyAccount(id:string){
 }
 
 async function getUserAccont(id:string){
-    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
-    try{
-        const [user] = await connection.query("select * from data.user_account where id = $1", [id])
-        return user
-    } finally{
-        connection.$pool.end()
-    }
+    const userDAO = new UserAccountDAO()
+    const user = await userDAO.getById(id)
+    return user
 }
 
-interface user{
-    name:string
-    cpf:string
-    email:string
-    phone:string
-    id:string
-    dateSignup:Date
-}
-interface company{
-    name:string
-    cnpj:string
-    email:string
-    phone:string
-    id:string
-    dateSignup:Date
-}
-
-async function signUp(input: any): Promise<any>{
+async function signUp(input: any){
     if(input.isCompany) return signUpCompany(input)
     if(!input.isCompany) return signUpUser(input)
 }
@@ -83,8 +62,8 @@ async function signUpUser(input:any){
     if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
     input.userId = crypto.randomUUID()
     await userDAO.save(input)
-    return {
-        userId: input.userId
+    return{
+        userId: input.userId    
     }
 }
 

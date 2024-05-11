@@ -5,7 +5,7 @@ export default class UserAccountDAO{
         await connection.query("insert into data.user_account (name, email, cpf, phone, id, creationdate) values ($1, $2, $3, $4, $5, $6)", [account.name, account.email, account.cpf, account.phone, account.userId, account.dateSignup])
         connection.$pool.end()
     }
-    async getById(accountId: any){
+    async getById(accountId: string){
         const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
         const [user] = await connection.query("select * from data.user_account where id = $1", [accountId])
         connection.$pool.end()
@@ -13,7 +13,7 @@ export default class UserAccountDAO{
     }
     async getByEmail(accountEmail: string){
         const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
-        const [user] = await connection.query("select * from data.user_account where id = $1", [accountEmail])
+        const [user] = await connection.query("select * from data.user_account where email = $1", [accountEmail])
         connection.$pool.end()
         return user
     }
