@@ -1,7 +1,6 @@
 import crypto from "crypto"
-import pgp from "pg-promise"
 import express, {Request, Response} from "express"
-import UserAccountDAO from "./UserAccountDAO"
+import AccountDAO from "./AccountDAO"
 const app = express()
 app.use(express.json())
 
@@ -31,29 +30,13 @@ app.get("/accounts/company/:id", async function(req: Request, res: Response){
 
 app.listen(3000)
 
-async function getCompanyAccount(id:string){
-    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
-    try{
-        const [company] = await connection.query("select * from data.company_account where id = $1", [id])
-        return company
-    } finally{
-        connection.$pool.end()
-    }
-}
-
-async function getUserAccont(id:string){
-    const userDAO = new UserAccountDAO()
-    const user = await userDAO.getById(id)
-    return user
-}
-
 async function signUp(input: any){
     if(input.isCompany) return signUpCompany(input)
     if(!input.isCompany) return signUpUser(input)
 }
 
 async function signUpUser(input:any){
-    const userDAO = new UserAccountDAO()
+    const userDAO = new AccountDAO()
     const user = await userDAO.getByEmail(input.email)
     if(user) throw new Error("This email already exists")
     if(isInvalidName(input.name)) throw new Error("Invalid name")
@@ -68,21 +51,31 @@ async function signUpUser(input:any){
 }
 
 async function signUpCompany(input:any){
-    const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
-    try{
-        const [company] = await connection.query("select * from data.company_account where email = $1", [input.email])
-        if(company) throw new Error("This email already exists")
-        if(isInvalidName(input.name)) throw new Error("Invalid name")
-        if(isInvalidEmail(input.email)) throw new Error("Invalid email")
-        if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
-        if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
-        const companyId = crypto.randomUUID()
-        const dateSignup = new Date()
-        await connection.query("insert into data.company_account (name, email, cnpj, phone, id, datecreation) values ($1, $2, $3, $4, $5, $6)", [input.name, input.email, input.cnpj, input.phone, companyId, dateSignup])
-        return companyId
-    } finally{
-        connection.$pool.end()
+    const accountDAO = new AccountDAO()
+    const company = await accountDAO.getByEmail(input.email, true)
+    if(company) throw new Error("This email already exists")
+    if(isInvalidName(input.name)) throw new Error("Invalid name")
+    if(isInvalidEmail(input.email)) throw new Error("Invalid email")
+    if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
+    if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
+    input.companyId = crypto.randomUUID()
+    input.dateSignup = new Date()
+    await accountDAO.save(input, true)
+    return{
+        companyId: input.companyId
     }
+}
+
+async function getCompanyAccount(id:string){
+    const accountDAO = new AccountDAO()
+    const company = await accountDAO.getById(id, true)
+    return company
+}
+
+async function getUserAccont(id:string){
+    const userDAO = new AccountDAO()
+    const user = await userDAO.getById(id)
+    return user
 }
 
 function validateCnpj(cnpj:string){
