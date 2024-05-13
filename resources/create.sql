@@ -1,5 +1,5 @@
 create schema data
-drop schema data
+drop schema data cascade 
 
 select * from data.user_account
 drop table data.user_account
