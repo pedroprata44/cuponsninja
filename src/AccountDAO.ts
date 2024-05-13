@@ -3,11 +3,11 @@ export default class UserAccountDAO{
     async save(account: any, isCompany=false){
         const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
         if(isCompany){
-            await connection.query("insert into data.company_account (name, email, cnpj, phone, id, datecreation) values ($1, $2, $3, $4, $5, $6)", [account.name, account.email, account.cnpj, account.phone, account.companyId, account.dateSignup])
+            await connection.query("insert into data.company_account (name, email, cnpj, phone, id, datesignup) values ($1, $2, $3, $4, $5, $6)", [account.name, account.email, account.cnpj, account.phone, account.companyId, account.dateSignup])
             connection.$pool.end()
         }
         if(!isCompany){
-            await connection.query("insert into data.user_account (name, email, cpf, phone, id, creationdate) values ($1, $2, $3, $4, $5, $6)", [account.name, account.email, account.cpf, account.phone, account.userId, account.dateSignup])
+            await connection.query("insert into data.user_account (name, email, cpf, phone, id, datesignup) values ($1, $2, $3, $4, $5, $6)", [account.name, account.email, account.cpf, account.phone, account.userId, account.dateSignup])
             connection.$pool.end()
         }
     }
