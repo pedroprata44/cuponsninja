@@ -44,6 +44,7 @@ async function signUpUser(input:any){
     if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
     if(isInvalidPhone(input.phone)) throw new Error("Invalid phone")
     input.userId = crypto.randomUUID()
+    input.dateSignup = new Date()
     await userDAO.save(input)
     return{
         userId: input.userId    
