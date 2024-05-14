@@ -76,7 +76,7 @@ test.each([undefined, null, "", "m.m"]
     expect(outputSignup.message).toBe("Invalid email")    
 })
 
-test.each([undefined, null, "", "111", "11111111111", "11111111111", "46890347810"]
+test.each([undefined, null, "", "111", "11111111111", "46890347810"]
 )("Should not do signup user with a invalid cpf", async function(cpf:any){
     const inputSignup = {
         email: `user${Math.random()}@user`,
