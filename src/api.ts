@@ -1,14 +1,15 @@
 import express, {Request, Response} from "express"
-import { signUp} from "./Signup"
-import { getUserAccont } from "./GetUserAccount"
-import { getCompanyAccount } from "./GetCompanyAccount"
+import SignUp from "./Signup"
+import GetUserAccount from "./GetUserAccount"
+import GetCompanyAccount from "./GetCompanyAccount"
 const app = express()
 app.use(express.json())
 
 app.post("/signup",  async function (req: Request, res: Response){
     try{
         const input = req.body
-        const output = await signUp(input)
+        const signup = new SignUp()
+        const output = await signup.execute(input)
         res.json(output)
     } catch(e:any){
         res.status(422).json({
@@ -19,13 +20,15 @@ app.post("/signup",  async function (req: Request, res: Response){
 
 app.get("/accounts/user/:id", async function(req: Request, res: Response){
     const input = req.params.id
-    const output = await getUserAccont(input)
+    const getuseraccount = new GetUserAccount()
+    const output = await getuseraccount.execute(input)
     res.json(output)
 })
 
 app.get("/accounts/company/:id", async function(req: Request, res: Response){
     const input = req.params.id
-    const output = await getCompanyAccount(input)
+    const getcompanyaccount = new GetCompanyAccount()
+    const output = await getcompanyaccount.execute(input)
     res.json(output)
 })
 
