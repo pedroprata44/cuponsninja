@@ -15,8 +15,7 @@ export default class SignUp{
     }
 
     async signUpUser(input:any){
-        const userDAO = new AccountDAO()
-        const user = await userDAO.getByEmail(input.email)
+        const user = await this.accountDAO.getByEmail(input.email)
         if(user) throw new Error("This email already exists")
         if(this.isInvalidName(input.name)) throw new Error("Invalid name")
         if(this.isInvalidEmail(input.email)) throw new Error("Invalid email")
@@ -24,15 +23,14 @@ export default class SignUp{
         if(this.isInvalidPhone(input.phone)) throw new Error("Invalid phone")
         input.userId = crypto.randomUUID()
         input.dateSignup = new Date()
-        await userDAO.save(input)
+        await this.accountDAO.save(input)
         return{
             userId: input.userId    
         }
     }
 
     async signUpCompany(input:any){
-        const accountDAO = new AccountDAO()
-        const company = await accountDAO.getByEmail(input.email, true)
+        const company = await this.accountDAO.getByEmail(input.email, true)
         if(company) throw new Error("This email already exists")
         if(this.isInvalidName(input.name)) throw new Error("Invalid name")
         if(this.isInvalidEmail(input.email)) throw new Error("Invalid email")
@@ -40,7 +38,7 @@ export default class SignUp{
         if(this.isInvalidPhone(input.phone)) throw new Error("Invalid phone")
         input.companyId = crypto.randomUUID()
         input.dateSignup = new Date()
-        await accountDAO.save(input, true)
+        await this.accountDAO.save(input, true)
         return{
             companyId: input.companyId
         }
