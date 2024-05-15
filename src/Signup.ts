@@ -61,4 +61,3 @@ export default class SignUp{
         return !phone.match(/^\([0-9]{2}\) [0-9]{4,5}-[0-9]{4}$/)
     }
 }
-
