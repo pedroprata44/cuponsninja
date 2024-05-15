@@ -16,6 +16,11 @@ test("Should do signup with valids fields", async function(){
         email: `user${Math.random()}@user`,
         phone: "(99) 9999-9999"
     }
+    const outputSignup = await signup.signUpUser(inputSignup)
+    const outputGetAccount = await getuseraccount.execute(outputSignup.userId)
+    expect(outputGetAccount.id).toBeDefined()
+    expect(outputGetAccount.name).toBe(inputSignup.name)
+    expect(outputGetAccount.email).toBe(inputSignup.email)
 })
 
 test("Should not do signup user with a email already exists", async function(){
@@ -38,6 +43,7 @@ test.each([undefined,null,"","user"])
     }
     await expect(() => signup.execute(inputSignup)).rejects.toThrow("Invalid name")
 })
+
 test.each([undefined,null,"","user.user"])
 ("Should do not signup with a invalid email", async function(email:any){
     const inputSignup = {
@@ -46,15 +52,16 @@ test.each([undefined,null,"","user.user"])
     }
     await expect(() => signup.execute(inputSignup)).rejects.toThrow("Invalid email")
 })
-test.each([undefined,null,"","111","11111111111","46890347810"])
-("Should do not signup with a invalid cpf", async function(cpf:any){
+
+test("Should do not signup with a invalid cpf", async function(){
     const inputSignup = {
         email: `user${Math.random()}@user`,
         name: "user user",
-        cpf: cpf
+        cpf: "46890347810"
     }
     await expect(() => signup.execute(inputSignup)).rejects.toThrow("Invalid cpf")
 })
+
 test.each([undefined, null, "", "111", "11111111111", "46890347810"])
 ("Should do not signup with a invalid cpf", async function(cpf:any){
     const inputSignup = {
@@ -64,6 +71,7 @@ test.each([undefined, null, "", "111", "11111111111", "46890347810"])
     }
     await expect(() => signup.execute(inputSignup)).rejects.toThrow("Invalid cpf")
 })
+
 test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"]
 )("Should not do signup user with a invalid phone", async function(phone:any){
     const inputSignup = {
