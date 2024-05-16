@@ -10,7 +10,7 @@ test("Do user signup by api", async function(){
         email: `user${Math.random()}@user`,
         phone: "(99) 9999-9999"
     }
-    const responseSignup = await axios.post("http://localhost:3000/signup", inputSignup)
+    const responseSignup = await axios.post("http://localhost:3000/signup/user", inputSignup)
     const outputSignup = responseSignup.data
     const responseGetAccount = await axios.get(`http://localhost:3000/accounts/user/${outputSignup.userId}`)
     const outputGetAccount = responseGetAccount.data
@@ -27,7 +27,7 @@ test("Do company signup by api", async function(){
         email: `company${Math.random()}@company`,
         phone: "(99) 9999-9999"
     }
-    const responseSignup = await axios.post("http://localhost:3000/signup", inputSignup)
+    const responseSignup = await axios.post("http://localhost:3000/signup/company", inputSignup)
     const outputSignup = responseSignup.data
     const responseGetAccount = await axios.get(`http://localhost:3000/accounts/company/${outputSignup.companyId}`)
     const outputGetAccount = responseGetAccount.data
