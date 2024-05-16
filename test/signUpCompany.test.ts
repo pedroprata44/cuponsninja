@@ -1,5 +1,7 @@
+import sinon from "sinon"
 import GetCompanyAccount from "../src/GetCompanyAccount"
 import SignupCompany from "../src/SignupCompany"
+import Logger from "../src/Logger"
 
 let signupCompany: SignupCompany
 let getCompanyAccount: GetCompanyAccount
@@ -9,7 +11,8 @@ beforeEach(() => {
     getCompanyAccount = new GetCompanyAccount()
 })
 
-test("Should do company signup with valids fields", async function(){
+test("Should do company signup by SPY", async function(){
+    const spyLoggerLog = sinon.spy(Logger.prototype, "log")
     const inputSignup = {
         isCompany: true,
         name: "company company",
@@ -22,6 +25,8 @@ test("Should do company signup with valids fields", async function(){
     expect(outputGetAccount.id).toBeDefined()
     expect(outputGetAccount.name).toBe(inputSignup.name)
     expect(outputGetAccount.email).toBe(inputSignup.email)
+    expect(spyLoggerLog.calledOnce).toBeTruthy()
+    expect(spyLoggerLog.calledWith("signup company company company")).toBeTruthy()
 })
 
 test("Should not do sign up company with a email already exists", async function(){

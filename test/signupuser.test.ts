@@ -1,15 +1,19 @@
 import GetUserAccount from "../src/GetUserAccount"
 import SignupUser from "../src/SignupUser"
-
+import sinon from "sinon"
+import UserDAO from "../src/UserDAO"
+import Logger from "../src/Logger"
 let signupUser: SignupUser
-let getuseraccount: GetUserAccount
+let getUserAccount: GetUserAccount
 
 beforeEach(() => {
     signupUser = new SignupUser()
-    getuseraccount = new GetUserAccount()
+    getUserAccount = new GetUserAccount()
 })
 
-test("Should do signup with valids fields", async function(){
+test("Should do user signup by Stub", async function(){
+    const stubUserDAOSave = sinon.stub(UserDAO.prototype, "save").resolves()
+    const stubUserDAOGetByEmail = sinon.stub(UserDAO.prototype, "getByEmail").resolves(null)
     const inputSignup = {
         name: "user user",
         cpf: "91015490069",
@@ -17,10 +21,31 @@ test("Should do signup with valids fields", async function(){
         phone: "(99) 9999-9999"
     }
     const outputSignup = await signupUser.execute(inputSignup)
-    const outputGetAccount = await getuseraccount.execute(outputSignup.userId)
-    expect(outputGetAccount.id).toBeDefined()
+    expect(outputSignup.userId).toBeDefined()
+    const stubUserDAOGetById = sinon.stub(UserDAO.prototype, "getById").resolves(inputSignup)
+    const outputGetAccount = await getUserAccount.execute(outputSignup.userId)
     expect(outputGetAccount.name).toBe(inputSignup.name)
     expect(outputGetAccount.email).toBe(inputSignup.email)
+    stubUserDAOSave.restore()
+    stubUserDAOGetByEmail.restore()
+    stubUserDAOGetById.restore()
+})
+
+test.only("Should do user signup by Mock", async function(){
+    const mockLogger = sinon.mock(Logger.prototype)
+    mockLogger.expects("log").withArgs("signup user user user").calledOnce
+    const inputSignup = {
+        name: "user user",
+        cpf: "91015490069",
+        email: `user${Math.random()}@user`,
+        phone: "(99) 9999-9999"
+    }
+    const outputSignup = await signupUser.execute(inputSignup)
+    expect(outputSignup.userId).toBeDefined()
+    const outputGetAccount = await getUserAccount.execute(outputSignup.userId)
+    expect(outputGetAccount.name).toBe(inputSignup.name)
+    expect(outputGetAccount.email).toBe(inputSignup.email)
+    mockLogger.verify()
 })
 
 test("Should not do signup user with a email already exists", async function(){
