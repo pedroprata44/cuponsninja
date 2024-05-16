@@ -1,12 +1,12 @@
-import AccountDAO from "./AccountDAO"
+import UserDAO from "./UserDAO"
 
 export default class GetUserAccount{
-    accountDAO: AccountDAO
+    userDAO: UserDAO
     constructor(){
-        this.accountDAO = new AccountDAO()
+        this.userDAO = new UserDAO()
     }
     async execute(id:string){
-        const user = await this.accountDAO.getById(id)
+        const user = await this.userDAO.getById(id)
         return user
     }
 }

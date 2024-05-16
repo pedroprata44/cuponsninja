@@ -1,15 +1,29 @@
 import express, {Request, Response} from "express"
-import SignUp from "./Signup"
 import GetUserAccount from "./GetUserAccount"
 import GetCompanyAccount from "./GetCompanyAccount"
+import SignupUser from "./SignupUser"
+import SignupCompany from "./SignupCompany"
 const app = express()
 app.use(express.json())
 
-app.post("/signup",  async function (req: Request, res: Response){
+app.post("/signup/user", async function (req: Request, res: Response){
     try{
         const input = req.body
-        const signup = new SignUp()
-        const output = await signup.execute(input)
+        const signupUser = new SignupUser()
+        const output = await signupUser.execute(input)
+        res.json(output)
+    } catch(e:any){
+        res.status(422).json({
+            message: e.message
+        })
+    }
+})
+
+app.post("/signup/company", async function (req: Request, res: Response){
+    try{
+        const input = req.body
+        const signupCompany = new SignupCompany()
+        const output = await signupCompany.execute(input)
         res.json(output)
     } catch(e:any){
         res.status(422).json({

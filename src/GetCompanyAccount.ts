@@ -1,11 +1,11 @@
-import AccountDAO from "./AccountDAO"
+import CompanyDAO from "./CompanyDAO"
 export default class GetCompanyAccount{
-    accountDAO: AccountDAO
+    companyDAO: CompanyDAO
     constructor(){
-        this.accountDAO = new AccountDAO()
+        this.companyDAO = new CompanyDAO()
     }
     async execute(id:string){
-        const company = await this.accountDAO.getById(id, true)
+        const company = await this.companyDAO.getById(id)
         return company
     }
 }
