@@ -1,14 +1,18 @@
 import crypto from "crypto"
 import { validateCpf } from "./CpfValidator"
 import UserDAO from "./UserDAO"
+import Logger from "./Logger"
 
 export default class SignupUser{
     userDAO: UserDAO
+    logger: Logger
     constructor(){
         this.userDAO = new UserDAO()
+        this.logger = new Logger()
     }
 
     async execute(input:any){
+        this.logger.log(`signup user ${input.name}`)
         const user = await this.userDAO.getByEmail(input.email)
         if(user) throw new Error("This email already exists")
         if(this.isInvalidName(input.name)) throw new Error("Invalid name")

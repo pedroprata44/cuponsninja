@@ -1,15 +1,19 @@
 import crypto from "crypto"
 import { validateCnpj } from "./CnpjValidator"
 import CompanyDAO from "./CompanyDAO"
+import Logger from "./Logger"
 CompanyDAO
 
 export default class SignupCompany{
     companyDAO: CompanyDAO
+    logger: Logger
     constructor(){
         this.companyDAO = new CompanyDAO()
+        this.logger = new Logger()
     }
 
     async execute(input:any){
+        this.logger.log(`signup company ${input.name}`)
         const company = await this.companyDAO.getByEmail(input.email)
         if(company) throw new Error("This email already exists")
         if(this.isInvalidName(input.name)) throw new Error("Invalid name")
