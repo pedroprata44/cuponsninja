@@ -1,19 +1,21 @@
 import GetUserAccount from "../src/GetUserAccount"
 import SignupUser from "../src/SignupUser"
 import sinon from "sinon"
-import UserDAO from "../src/UserDAO"
-import Logger from "../src/Logger"
+import UserDAODatabase from "../src/UserDAODatabase"
+import LoggerConsole from "../src/LoggerConsole"
 let signupUser: SignupUser
 let getUserAccount: GetUserAccount
 
 beforeEach(() => {
-    signupUser = new SignupUser()
-    getUserAccount = new GetUserAccount()
+    const userDAO = new UserDAODatabase()
+    const logger = new LoggerConsole()
+    signupUser = new SignupUser(userDAO, logger)
+    getUserAccount = new GetUserAccount(userDAO)
 })
 
 test("Should do user signup by Stub", async function(){
-    const stubUserDAOSave = sinon.stub(UserDAO.prototype, "save").resolves()
-    const stubUserDAOGetByEmail = sinon.stub(UserDAO.prototype, "getByEmail").resolves(null)
+    const stubUserDAOSave = sinon.stub(UserDAODatabase.prototype, "save").resolves()
+    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
     const inputSignup = {
         name: "user user",
         cpf: "91015490069",
@@ -22,7 +24,7 @@ test("Should do user signup by Stub", async function(){
     }
     const outputSignup = await signupUser.execute(inputSignup)
     expect(outputSignup.userId).toBeDefined()
-    const stubUserDAOGetById = sinon.stub(UserDAO.prototype, "getById").resolves(inputSignup)
+    const stubUserDAOGetById = sinon.stub(UserDAODatabase.prototype, "getById").resolves(inputSignup)
     const outputGetAccount = await getUserAccount.execute(outputSignup.userId)
     expect(outputGetAccount.name).toBe(inputSignup.name)
     expect(outputGetAccount.email).toBe(inputSignup.email)
@@ -31,8 +33,8 @@ test("Should do user signup by Stub", async function(){
     stubUserDAOGetById.restore()
 })
 
-test.only("Should do user signup by Mock", async function(){
-    const mockLogger = sinon.mock(Logger.prototype)
+test("Should do user signup by Mock", async function(){
+    const mockLogger = sinon.mock(LoggerConsole.prototype)
     mockLogger.expects("log").withArgs("signup user user user").calledOnce
     const inputSignup = {
         name: "user user",
@@ -46,6 +48,7 @@ test.only("Should do user signup by Mock", async function(){
     expect(outputGetAccount.name).toBe(inputSignup.name)
     expect(outputGetAccount.email).toBe(inputSignup.email)
     mockLogger.verify()
+    mockLogger.restore()
 })
 
 test("Should not do signup user with a email already exists", async function(){
