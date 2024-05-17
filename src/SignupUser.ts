@@ -6,9 +6,9 @@ import Logger from "./Logger"
 export default class SignupUser{
     userDAO: UserDAO
     logger: Logger
-    constructor(){
-        this.userDAO = new UserDAO()
-        this.logger = new Logger()
+    constructor(userDAO: UserDAO, logger: Logger){
+        this.userDAO = userDAO
+        this.logger = logger
     }
 
     async execute(input:any){
