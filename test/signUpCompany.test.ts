@@ -1,16 +1,17 @@
 import sinon from "sinon"
 import GetCompanyAccount from "../src/GetCompanyAccount"
 import SignupCompany from "../src/SignupCompany"
-import Logger from "../src/Logger"
 import LoggerConsole from "../src/LoggerConsole"
+import CompanyDAODatabase from "../src/CompanyDAODatabase"
 
 let signupCompany: SignupCompany
 let getCompanyAccount: GetCompanyAccount
 
 beforeEach(() => {
     const logger = new LoggerConsole()
-    signupCompany = new SignupCompany(logger)
-    getCompanyAccount = new GetCompanyAccount()
+    const companyDAO = new CompanyDAODatabase()
+    signupCompany = new SignupCompany(logger, companyDAO)
+    getCompanyAccount = new GetCompanyAccount(companyDAO)
 })
 
 test("Should do company signup by SPY", async function(){
