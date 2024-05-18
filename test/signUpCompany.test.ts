@@ -8,7 +8,8 @@ let signupCompany: SignupCompany
 let getCompanyAccount: GetCompanyAccount
 
 beforeEach(() => {
-    signupCompany = new SignupCompany()
+    const logger = new LoggerConsole()
+    signupCompany = new SignupCompany(logger)
     getCompanyAccount = new GetCompanyAccount()
 })
 
