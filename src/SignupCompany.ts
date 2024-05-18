@@ -7,9 +7,9 @@ CompanyDAO
 export default class SignupCompany{
     companyDAO: CompanyDAO
     logger: Logger
-    constructor(){
+    constructor(logger: Logger){
         this.companyDAO = new CompanyDAO()
-        this.logger = new Logger()
+        this.logger = logger
     }
 
     async execute(input:any){

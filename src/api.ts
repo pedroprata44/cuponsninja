@@ -3,13 +3,17 @@ import GetUserAccount from "./GetUserAccount"
 import GetCompanyAccount from "./GetCompanyAccount"
 import SignupUser from "./SignupUser"
 import SignupCompany from "./SignupCompany"
+import UserDAODatabase from "./UserDAODatabase"
+import LoggerConsole from "./LoggerConsole"
 const app = express()
 app.use(express.json())
 
 app.post("/signup/user", async function (req: Request, res: Response){
     try{
         const input = req.body
-        const signupUser = new SignupUser()
+        const userDAO = new UserDAODatabase()
+        const logger = new LoggerConsole()
+        const signupUser = new SignupUser(userDAO, logger)
         const output = await signupUser.execute(input)
         res.json(output)
     } catch(e:any){
@@ -22,7 +26,8 @@ app.post("/signup/user", async function (req: Request, res: Response){
 app.post("/signup/company", async function (req: Request, res: Response){
     try{
         const input = req.body
-        const signupCompany = new SignupCompany()
+        const logger = new LoggerConsole()
+        const signupCompany = new SignupCompany(logger)
         const output = await signupCompany.execute(input)
         res.json(output)
     } catch(e:any){
@@ -34,7 +39,8 @@ app.post("/signup/company", async function (req: Request, res: Response){
 
 app.get("/accounts/user/:id", async function(req: Request, res: Response){
     const input = req.params.id
-    const getuseraccount = new GetUserAccount()
+    const userDAO = new UserDAODatabase()
+    const getuseraccount = new GetUserAccount(userDAO)
     const output = await getuseraccount.execute(input)
     res.json(output)
 })
