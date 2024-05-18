@@ -2,13 +2,12 @@ import crypto from "crypto"
 import { validateCnpj } from "./CnpjValidator"
 import CompanyDAO from "./CompanyDAO"
 import Logger from "./Logger"
-CompanyDAO
 
 export default class SignupCompany{
     companyDAO: CompanyDAO
     logger: Logger
-    constructor(logger: Logger){
-        this.companyDAO = new CompanyDAO()
+    constructor(logger: Logger, companyDAO: CompanyDAO){
+        this.companyDAO = companyDAO
         this.logger = logger
     }
 

@@ -1,8 +1,8 @@
 import CompanyDAO from "./CompanyDAO"
 export default class GetCompanyAccount{
     companyDAO: CompanyDAO
-    constructor(){
-        this.companyDAO = new CompanyDAO()
+    constructor(companyDAO: CompanyDAO){
+        this.companyDAO = companyDAO
     }
     async execute(id:string){
         const company = await this.companyDAO.getById(id)
