@@ -1,11 +1,11 @@
-import CompanyDAO from "./CompanyDAO"
+import GetCompanyDAO from "./GetCompanyDAO"
 export default class GetCompanyAccount{
-    companyDAO: CompanyDAO
-    constructor(companyDAO: CompanyDAO){
-        this.companyDAO = companyDAO
+    getCompanyDAO: GetCompanyDAO
+    constructor(getCompanyDAO: GetCompanyDAO){
+        this.getCompanyDAO = getCompanyDAO
     }
     async execute(id:string){
-        const company = await this.companyDAO.getById(id)
+        const company = await this.getCompanyDAO.getById(id)
         return company
     }
 }

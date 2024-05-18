@@ -1,19 +1,19 @@
 import crypto from "crypto"
 import { validateCpf } from "./CpfValidator"
-import UserDAO from "./UserDAO"
 import Logger from "./Logger"
+import SignupUserDAO from "./SignupUserDAO"
 
 export default class SignupUser{
-    userDAO: UserDAO
+    signupUserDAO: SignupUserDAO
     logger: Logger
-    constructor(userDAO: UserDAO, logger: Logger){
-        this.userDAO = userDAO
+    constructor(userDAO: SignupUserDAO, logger: Logger){
+        this.signupUserDAO = userDAO
         this.logger = logger
     }
 
     async execute(input:any){
         this.logger.log(`signup user ${input.name}`)
-        const user = await this.userDAO.getByEmail(input.email)
+        const user = await this.signupUserDAO.getByEmail(input.email)
         if(user) throw new Error("This email already exists")
         if(this.isInvalidName(input.name)) throw new Error("Invalid name")
         if(this.isInvalidEmail(input.email)) throw new Error("Invalid email")
@@ -21,7 +21,7 @@ export default class SignupUser{
         if(this.isInvalidPhone(input.phone)) throw new Error("Invalid phone")
         input.userId = crypto.randomUUID()
         input.dateSignup = new Date()
-        await this.userDAO.save(input)
+        await this.signupUserDAO.save(input)
         return{
             userId: input.userId    
         }
