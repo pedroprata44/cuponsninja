@@ -15,6 +15,19 @@ beforeEach(() => {
     getUserAccount = new GetUserAccount(userDAO)
 })
 
+test.only("Should do user signup", async function(){
+    const inputSignup = {
+        name: "user user",
+        cpf: "91015490069",
+        email: `user${Math.random()}@user`,
+        phone: "(99) 9999-9999"
+    }
+    const outputSignup = await signupUser.execute(inputSignup)
+    const outputGetAccount = await getUserAccount.execute(outputSignup.userId)
+    expect(outputGetAccount.name).toBe(inputSignup.name)
+    expect(outputGetAccount.email).toBe(inputSignup.email) 
+})
+
 test("Should do user signup by Stub", async function(){
     const stubUserDAOSave = sinon.stub(UserDAODatabase.prototype, "save").resolves()
     const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
