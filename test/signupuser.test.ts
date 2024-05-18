@@ -3,6 +3,8 @@ import SignupUser from "../src/SignupUser"
 import sinon from "sinon"
 import UserDAODatabase from "../src/UserDAODatabase"
 import LoggerConsole from "../src/LoggerConsole"
+import UserDAO from "../src/UserDAO"
+import Logger from "../src/Logger"
 let signupUser: SignupUser
 let getUserAccount: GetUserAccount
 
@@ -31,6 +33,37 @@ test("Should do user signup by Stub", async function(){
     stubUserDAOSave.restore()
     stubUserDAOGetByEmail.restore()
     stubUserDAOGetById.restore()
+})
+
+test("Should do user signup by Fake", async function(){
+    const inputSignup = {
+        name: "user user",
+        cpf: "91015490069",
+        email: `user${Math.random()}@user`,
+        phone: "(99) 9999-9999"
+    }
+    const userDAO: UserDAO = {
+        async save (user: any): Promise<void> {
+        },
+        async getById (userId: string): Promise<any> {
+            return inputSignup
+        },
+        async getByEmail (userEmail: string): Promise<any> {
+            return undefined
+        }
+    }
+    const logger: Logger = {
+        log (message: string): void {
+        }
+    }
+    const signupUser = new SignupUser(userDAO, logger)
+    const getUserAccount = new GetUserAccount(userDAO)
+    const outputSignup = await signupUser.execute(inputSignup)
+    expect(outputSignup.userId).toBeDefined()
+    const outputGetAccount = await getUserAccount.execute(outputSignup.userId)
+    expect(outputGetAccount.name).toBe(inputSignup.name)
+    expect(outputGetAccount.email).toBe(inputSignup.email)
+
 })
 
 test("Should do user signup by Mock", async function(){
