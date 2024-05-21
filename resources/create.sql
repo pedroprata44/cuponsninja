@@ -1,9 +1,6 @@
 create schema data
 drop schema data cascade 
 
-select * from data.user_account
-drop table data.user_account
-
 create table data.user_account(
     id uuid primary key,
     email text not null,
@@ -12,9 +9,8 @@ create table data.user_account(
     phone text not null,
     datesignup date default CURRENT_DATE not null
 )
-
-select * from data.company_account
-drop table data.company_account
+select * from data.user_account
+drop table data.user_account
 
 create table data.company_account(
     id uuid primary key,
@@ -24,3 +20,14 @@ create table data.company_account(
     phone text not null,
     datesignup date default CURRENT_DATE not null
 )
+select * from data.company_account
+drop table data.company_account
+
+create table data.coupon(
+    company_id uuid not null,
+    description text not null,
+    percentage_discount text not null,
+    quantity integer not null
+)
+select * from data.coupon
+drop table data.coupon
