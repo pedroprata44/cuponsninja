@@ -25,10 +25,10 @@ drop table data.company_account
 
 create table data.coupon(
     id uuid primary key,
-    company_id uuid not null,
-    description text not null,
-    percentage_discount text not null,
-    quantity integer not null
+    created_by uuid not null,
+    describe text not null,
+    discount text not null,
+    quant text not null,
 )
 select * from data.coupon
 drop table data.coupon
