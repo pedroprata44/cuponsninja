@@ -24,6 +24,7 @@ select * from data.company_account
 drop table data.company_account
 
 create table data.coupon(
+    id uuid primary key,
     company_id uuid not null,
     description text not null,
     percentage_discount text not null,
