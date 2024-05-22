@@ -15,7 +15,7 @@ beforeEach(() => {
     getUserAccount = new GetUserAccount(userDAO)
 })
 
-test.only("Should do user signup", async function(){
+test("Should do user signup", async function(){
     const inputSignup = {
         name: "user user",
         cpf: "91015490069",
