@@ -28,7 +28,7 @@ create table data.coupon(
     created_by uuid not null,
     describe text not null,
     discount text not null,
-    quant text not null,
+    quant text not null
 )
 select * from data.coupon
 drop table data.coupon
