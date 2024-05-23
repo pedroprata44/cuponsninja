@@ -1,11 +1,11 @@
 import CompanyDAODatabase from "../src/CompanyDAODatabase"
 import CouponDAODatabase from "../src/CouponDAODatabase"
 import CouponCreate from "../src/CouponCreate"
-import GetCoupon from "../src/GetCoupon"
+import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"
 
 let couponCreate: CouponCreate
-let getCoupon: GetCoupon
+let couponGet: CouponGet
 let logger: LoggerConsole
 let couponDAO: CouponDAODatabase
 let companyDAO: CompanyDAODatabase
@@ -15,7 +15,7 @@ beforeEach(() => {
     couponDAO = new CouponDAODatabase()
     companyDAO = new CompanyDAODatabase
     couponCreate = new CouponCreate(logger, couponDAO, companyDAO)
-    getCoupon = new GetCoupon(couponDAO)
+    couponGet = new CouponGet(couponDAO)
 })
 
 test("Should create a coupon", async function(){
@@ -25,11 +25,11 @@ test("Should create a coupon", async function(){
         quantity: 1
     }
     
-    const outputCreate = await couponCreate.execute(inputCreate)
-    const outputGetCoupon = await getCoupon.execute(outputCreate.couponId)
-    expect(outputGetCoupon.id).toBeDefined()
-    expect(outputGetCoupon.describe).toBe(inputCreate.describe)
-    expect(outputGetCoupon.quantity).toBe(inputCreate.quantity)
+    const outputCouponCreate = await couponCreate.execute(inputCreate)
+    const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
+    expect(outputCouponGet.id).toBeDefined()
+    expect(outputCouponGet.describe).toBe(inputCreate.describe)
+    expect(outputCouponGet.quantity).toBe(inputCreate.quantity)
 })
 
 test.each([undefined, null, "", "1634919c-7f5f-49a3-9c2d-24e0e1b1c6b2"])("Should not create coupon with a invalid createdBy", async function(createdBy: any){

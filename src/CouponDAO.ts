@@ -1,6 +1,6 @@
-import GetCouponDAO from "./GetCouponDAO"
+import CouponGetDAO from "./CouponGetDAO"
 
-export default interface CouponDAO extends GetCouponDAO{
+export default interface CouponDAO extends CouponGetDAO{
     save(coupon:any): Promise<void>
     getById(couponId: string): Promise<any>
 }

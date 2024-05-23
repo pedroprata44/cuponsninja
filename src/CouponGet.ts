@@ -1,8 +1,8 @@
-import GetCouponDAO from "./GetCouponDAO";
+import CouponGetDAO from "./CouponGetDAO";
 
-export default class GetCoupon{
-    couponDAO: GetCouponDAO
-    constructor(couponDAO:GetCouponDAO){
+export default class CouponGet{
+    couponDAO: CouponGetDAO
+    constructor(couponDAO:CouponGetDAO){
         this.couponDAO = couponDAO
     }
     async execute(couponId: string){

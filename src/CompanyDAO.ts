@@ -1,7 +1,7 @@
-import GetCompanyDAO from "./GetCompanyDAO"
-import SignupCompanyDAO from "./SignupCompanyDAO"
+import CompanyGetDAO from "./CompanyGetDAO"
+import CompanySignupDAO from "./CompanySignupDAO"
 
-export default interface CompanyDAO extends SignupCompanyDAO, GetCompanyDAO{
+export default interface CompanyDAO extends CompanySignupDAO, CompanyGetDAO{
     save(company: any): Promise<void>
     getById(companyId: string): Promise<any>
     getByEmail(companyEmail: string): Promise<any>

@@ -1,12 +1,12 @@
 import CouponDAO from "./CouponDAO";
-import GetCompanyDAO from "./GetCompanyDAO";
+import CompanyGetDAO from "./CompanyGetDAO";
 import Logger from "./Logger";
 
 export default class CouponCreate{
     logger: Logger
     couponDAO: CouponDAO
-    getCompanyDAO: GetCompanyDAO
-    constructor(logger:Logger, couponDAO: CouponDAO, companyDAO: GetCompanyDAO){
+    getCompanyDAO: CompanyGetDAO
+    constructor(logger:Logger, couponDAO: CouponDAO, companyDAO: CompanyGetDAO){
         this.logger = logger
         this.couponDAO = couponDAO
         this.getCompanyDAO = companyDAO

@@ -1,8 +1,8 @@
 import express, {Request, Response} from "express"
-import GetUserAccount from "./GetUserAccount"
-import GetCompanyAccount from "./GetCompanyAccount"
-import SignupUser from "./SignupUser"
-import SignupCompany from "./SignupCompany"
+import UserGetAccount from "./UserGetAccount"
+import CompanyGetAccount from "./CompanyGetAccount"
+import UserSignup from "./UserSignup"
+import CompanySignup from "./CompanySignup"
 import UserDAODatabase from "./UserDAODatabase"
 import LoggerConsole from "./LoggerConsole"
 import CompanyDAODatabase from "./CompanyDAODatabase"
@@ -14,8 +14,8 @@ app.post("/signup/user", async function (req: Request, res: Response){
         const input = req.body
         const userDAO = new UserDAODatabase()
         const logger = new LoggerConsole()
-        const signupUser = new SignupUser(userDAO, logger)
-        const output = await signupUser.execute(input)
+        const userSignup = new UserSignup(userDAO, logger)
+        const output = await userSignup.execute(input)
         res.json(output)
     } catch(e:any){
         res.status(422).json({
@@ -29,8 +29,8 @@ app.post("/signup/company", async function (req: Request, res: Response){
         const input = req.body
         const logger = new LoggerConsole()
         const companyDAO = new CompanyDAODatabase()
-        const signupCompany = new SignupCompany(logger, companyDAO)
-        const output = await signupCompany.execute(input)
+        const companySignup = new CompanySignup(logger, companyDAO)
+        const output = await companySignup.execute(input)
         res.json(output)
     } catch(e:any){
         res.status(422).json({
@@ -42,16 +42,16 @@ app.post("/signup/company", async function (req: Request, res: Response){
 app.get("/accounts/user/:id", async function(req: Request, res: Response){
     const input = req.params.id
     const userDAO = new UserDAODatabase()
-    const getuseraccount = new GetUserAccount(userDAO)
-    const output = await getuseraccount.execute(input)
+    const userGetAccount = new UserGetAccount(userDAO)
+    const output = await userGetAccount.execute(input)
     res.json(output)
 })
 
 app.get("/accounts/company/:id", async function(req: Request, res: Response){
     const input = req.params.id
     const companyDAO = new CompanyDAODatabase()
-    const getcompanyaccount = new GetCompanyAccount(companyDAO)
-    const output = await getcompanyaccount.execute(input)
+    const companyGetAccount = new CompanyGetAccount(companyDAO)
+    const output = await companyGetAccount.execute(input)
     res.json(output)
 })
 

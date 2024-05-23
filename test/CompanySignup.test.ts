@@ -1,17 +1,17 @@
 import sinon from "sinon"
-import GetCompanyAccount from "../src/GetCompanyAccount"
-import SignupCompany from "../src/SignupCompany"
+import CompanyGetDAO from "../src/CompanyGetAccount"
+import CompanySignup from "../src/CompanySignup"
 import LoggerConsole from "../src/LoggerConsole"
 import CompanyDAODatabase from "../src/CompanyDAODatabase"
 
-let signupCompany: SignupCompany
-let getCompanyAccount: GetCompanyAccount
+let companySignup: CompanySignup
+let companyGetAccount: CompanyGetDAO
 
 beforeEach(() => {
     const logger = new LoggerConsole()
     const companyDAO = new CompanyDAODatabase()
-    signupCompany = new SignupCompany(logger, companyDAO)
-    getCompanyAccount = new GetCompanyAccount(companyDAO)
+    companySignup = new CompanySignup(logger, companyDAO)
+    companyGetAccount = new CompanyGetDAO(companyDAO)
 })
 
 test("Should do company signup by SPY", async function(){
@@ -23,8 +23,8 @@ test("Should do company signup by SPY", async function(){
         email: `company${Math.random()}@company`,
         phone: "(99) 9999-9999"
     }
-    const outputSignup = await signupCompany.execute(inputSignup)
-    const outputGetAccount = await getCompanyAccount.execute(outputSignup.companyId)
+    const outputSignup = await companySignup.execute(inputSignup)
+    const outputGetAccount = await companyGetAccount.execute(outputSignup.companyId)
     expect(outputGetAccount.id).toBeDefined()
     expect(outputGetAccount.name).toBe(inputSignup.name)
     expect(outputGetAccount.email).toBe(inputSignup.email)
@@ -41,8 +41,8 @@ test("Should not do sign up company with a email already exists", async function
         email: `company${Math.random()}@company`,
         phone: "(99) 9999-9999"
     }
-    await signupCompany.execute(inputSignup)
-    await expect(() => signupCompany.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
+    await companySignup.execute(inputSignup)
+    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
 })
 
 test.each([undefined, null, "", "company"])("Shoud not do signup company with a invalid name", async function(name:any){
@@ -51,7 +51,7 @@ test.each([undefined, null, "", "company"])("Shoud not do signup company with a 
         email: `company${Math.random()}@company`,
         name: name
     }
-    await expect(() => signupCompany.execute(inputSignup)).rejects.toThrow(new Error("Invalid name"))
+    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid name"))
 })
 
 test.each([undefined, null, "", "company.company"])("Should not do signup company with a invalid email", async function(email:any){
@@ -60,7 +60,7 @@ test.each([undefined, null, "", "company.company"])("Should not do signup compan
         email: email,
         name: "company company"
     }
-    await expect(() => signupCompany.execute(inputSignup)).rejects.toThrow(new Error("Invalid email"))
+    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid email"))
 })
 
 test("Should not do signup company with a invalid cnpj", async function(){
@@ -70,7 +70,7 @@ test("Should not do signup company with a invalid cnpj", async function(){
         name: "company company",
         cnpj: "83800838000155"
     }
-    await expect(() => signupCompany.execute(inputSignup)).rejects.toThrow(new Error("Invalid cnpj"))
+    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid cnpj"))
 })
 
 test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"])("Should not do signup company with a invalid phone", async function(phone:any){
@@ -81,5 +81,5 @@ test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"])(
         cnpj: "83800838000197",
         phone: phone
     }
-    await expect(() => signupCompany.execute(inputSignup)).rejects.toThrow(new Error("Invalid phone"))
+    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid phone"))
 })
