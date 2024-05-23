@@ -1,10 +1,10 @@
 import CompanyDAODatabase from "../src/CompanyDAODatabase"
 import CouponDAODatabase from "../src/CouponDAODatabase"
-import CreateCoupon from "../src/CreateCoupon"
+import CouponCreate from "../src/CouponCreate"
 import GetCoupon from "../src/GetCoupon"
 import LoggerConsole from "../src/LoggerConsole"
 
-let createCoupon: CreateCoupon
+let couponCreate: CouponCreate
 let getCoupon: GetCoupon
 let logger: LoggerConsole
 let couponDAO: CouponDAODatabase
@@ -14,7 +14,7 @@ beforeEach(() => {
     logger = new LoggerConsole()
     couponDAO = new CouponDAODatabase()
     companyDAO = new CompanyDAODatabase
-    createCoupon = new CreateCoupon(logger, couponDAO, companyDAO)
+    couponCreate = new CouponCreate(logger, couponDAO, companyDAO)
     getCoupon = new GetCoupon(couponDAO)
 })
 
@@ -25,7 +25,7 @@ test("Should create a coupon", async function(){
         quantity: 1
     }
     
-    const outputCreate = await createCoupon.execute(inputCreate)
+    const outputCreate = await couponCreate.execute(inputCreate)
     const outputGetCoupon = await getCoupon.execute(outputCreate.couponId)
     expect(outputGetCoupon.id).toBeDefined()
     expect(outputGetCoupon.describe).toBe(inputCreate.describe)
@@ -38,7 +38,7 @@ test.each([undefined, null, "", "1634919c-7f5f-49a3-9c2d-24e0e1b1c6b2"])("Should
         describe: "describe",
         quantity: 1
     }
-    await expect(createCoupon.execute(inputCreate)).rejects.toThrow(new Error("Invalid created by"))
+    await expect(couponCreate.execute(inputCreate)).rejects.toThrow(new Error("Invalid created by"))
 })
 
 test.each([undefined, null, "", "ddddddddddddddddddddddddddddddd"])("Should not create coupon with a invalid describe", async function(describe: any){
@@ -47,5 +47,5 @@ test.each([undefined, null, "", "ddddddddddddddddddddddddddddddd"])("Should not 
         describe: describe,
         quantity: 1
     }
-    await expect(createCoupon.execute(inputCreate)).rejects.toThrow(new Error("Invalid describe"))
+    await expect(couponCreate.execute(inputCreate)).rejects.toThrow(new Error("Invalid describe"))
 })

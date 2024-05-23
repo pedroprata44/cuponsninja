@@ -2,7 +2,7 @@ import CouponDAO from "./CouponDAO";
 import GetCompanyDAO from "./GetCompanyDAO";
 import Logger from "./Logger";
 
-export default class CreateCoupon{
+export default class CouponCreate{
     logger: Logger
     couponDAO: CouponDAO
     getCompanyDAO: GetCompanyDAO
