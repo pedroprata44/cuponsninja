@@ -24,29 +24,23 @@ beforeEach(() => {
     companySignup = new CompanySignup(logger, companyDAO)
 })
 
-test("Should create a coupon", async function(){
-
-    const inputSignup = {
+test("Should consume a coupon", async function(){
+    const inputCompany = {
         isCompany: true,
         name: "company company",
         cnpj: "83800838000197",
         email: `company${Math.random()}@company`,
         phone: "(99) 9999-9999"
     }
-
-    const companyId = (await companySignup.execute(inputSignup)).companyId
-
-    const inputCreate = {
+    const companyId = (await companySignup.execute(inputCompany)).companyId
+    const inputCoupon = {
         createdBy: companyId,
         describe: "describe",
         quantity: 1
     }
-    
-    const outputCouponCreate = await couponCreate.execute(inputCreate)
+    const outputCouponCreate = await couponCreate.execute(inputCoupon)
     const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
-
     await couponConsume.execute(outputCouponGet.id)
-
-    const coupon = await couponGet.execute(outputCouponCreate.couponId)
-    expect(coupon.quantity).toBe(outputCouponGet.quantity - 1)
+    const couponConsumed = await couponGet.execute(outputCouponCreate.couponId)
+    expect(couponConsumed.quantity).toBe(outputCouponGet.quantity - 1)
 })

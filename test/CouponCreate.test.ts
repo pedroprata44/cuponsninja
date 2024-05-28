@@ -23,7 +23,7 @@ beforeEach(() => {
 
 test("Should create a coupon", async function(){
 
-    const inputSignup = {
+    const inputCompany = {
         isCompany: true,
         name: "company company",
         cnpj: "83800838000197",
@@ -31,28 +31,28 @@ test("Should create a coupon", async function(){
         phone: "(99) 9999-9999"
     }
 
-    const companyId = (await companySignup.execute(inputSignup)).companyId
+    const companyId = (await companySignup.execute(inputCompany)).companyId
 
-    const inputCreate = {
+    const inputCoupon = {
         createdBy: companyId,
         describe: "describe",
         quantity: 1
     }
     
-    const outputCouponCreate = await couponCreate.execute(inputCreate)
+    const outputCouponCreate = await couponCreate.execute(inputCoupon)
     const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
     expect(outputCouponGet.id).toBeDefined()
-    expect(outputCouponGet.describe).toBe(inputCreate.describe)
-    expect(outputCouponGet.quantity).toBe(inputCreate.quantity)
+    expect(outputCouponGet.describe).toBe(inputCoupon.describe)
+    expect(outputCouponGet.quantity).toBe(inputCoupon.quantity)
 })
 
 test.each([undefined, null, "", "1634919c-7f5f-49a3-9c2d-24e0e1b1c6b2"])("Should not create coupon with a invalid createdBy", async function(createdBy: any){
-    const inputCreate = {
+    const inputCoupon = {
         createdBy: createdBy,
         describe: "describe",
         quantity: 1
     }
-    await expect(couponCreate.execute(inputCreate)).rejects.toThrow(new Error("Invalid created by"))
+    await expect(couponCreate.execute(inputCoupon)).rejects.toThrow(new Error("Invalid created by"))
 })
 
 test.each([undefined, null, "", "ddddddddddddddddddddddddddddddd"])("Should not create coupon with a invalid describe", async function(describe: any){
@@ -67,12 +67,12 @@ test.each([undefined, null, "", "ddddddddddddddddddddddddddddddd"])("Should not 
 
     const companyId = (await companySignup.execute(inputSignup)).companyId
     
-    const inputCreate = {
+    const inputCoupon = {
         createdBy: companyId, 
         describe: describe,
         quantity: 1
     }
-    await expect(couponCreate.execute(inputCreate)).rejects.toThrow(new Error("Invalid describe"))
+    await expect(couponCreate.execute(inputCoupon)).rejects.toThrow(new Error("Invalid describe"))
 })
 
 test.each([undefined, null, 0])("Should not create coupon with a invalid quantity", async function(quantity: any){
@@ -87,10 +87,10 @@ test.each([undefined, null, 0])("Should not create coupon with a invalid quantit
 
     const companyId = (await companySignup.execute(inputSignup)).companyId
     
-    const inputCreate = {
+    const inputCoupon = {
         createdBy: companyId,
         describe: "describe",
         quantity: quantity
     }
-    await expect(couponCreate.execute(inputCreate)).rejects.toThrow(new Error("Invalid quantity"))
+    await expect(couponCreate.execute(inputCoupon)).rejects.toThrow(new Error("Invalid quantity"))
 })
