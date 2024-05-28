@@ -4,11 +4,8 @@ import Logger from "./Logger"
 import CompanySignupDAO from "./CompanySignupDAO"
 
 export default class CompanySignup{
-    companySignupDAO: CompanySignupDAO
-    logger: Logger
-    constructor(logger: Logger, companySignupDAO: CompanySignupDAO){
-        this.companySignupDAO = companySignupDAO
-        this.logger = logger
+    
+    constructor(private logger: Logger, private companySignupDAO: CompanySignupDAO){
     }
 
     async execute(input:any){
