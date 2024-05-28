@@ -1,15 +1,9 @@
-import CouponDAO from "./CouponDAO";
 import CompanyGetDAO from "./CompanyGetDAO";
 import Logger from "./Logger";
+import CouponCreateDAO from "./CouponCreateDAO";
 
 export default class CouponCreate{
-    logger: Logger
-    couponDAO: CouponDAO
-    getCompanyDAO: CompanyGetDAO
-    constructor(logger:Logger, couponDAO: CouponDAO, companyDAO: CompanyGetDAO){
-        this.logger = logger
-        this.couponDAO = couponDAO
-        this.getCompanyDAO = companyDAO
+    constructor(private logger: Logger, private couponCreateDAO: CouponCreateDAO, private getCompanyDAO: CompanyGetDAO){
     }
     async execute(input:any){
         this.logger.log(input)
@@ -17,7 +11,7 @@ export default class CouponCreate{
         if(this.isInvalidDescribe(input.describe)) throw new Error("Invalid describe")
         if(this.isInvalidQuantity(input.quantity)) throw new Error("Invalid quantity")
         input.id = crypto.randomUUID()
-        await this.couponDAO.save(input)
+        await this.couponCreateDAO.save(input)
         return{
             couponId: input.id
         }
