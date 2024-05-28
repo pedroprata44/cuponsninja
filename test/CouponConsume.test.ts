@@ -5,6 +5,7 @@ import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"
 import CompanySignup from "../src/CompanySignup"
 import CouponConsume from "../src/CouponConsume"
+import CouponCreateDAO from "../src/CouponCreateDAO"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
@@ -43,4 +44,29 @@ test("Should consume a coupon", async function(){
     await couponConsume.execute(outputCouponGet.id)
     const couponConsumed = await couponGet.execute(outputCouponCreate.couponId)
     expect(couponConsumed.quantity).toBe(outputCouponGet.quantity - 1)
+})
+
+test("Should not consume a coupon with a invalid coupon id", async function(){
+    expect(() => couponConsume.execute(crypto.randomUUID())).rejects.toThrow(new Error("This coupon id not exists"))
+})
+
+test("Should not consume a coupon with a invalid coupon quantity", async function(){
+    const inputCompany = {
+        isCompany: true,
+        name: "company company",
+        cnpj: "83800838000197",
+        email: `company${Math.random()}@company`,
+        phone: "(99) 9999-9999"
+    }
+    const companyId = (await companySignup.execute(inputCompany)).companyId
+    const inputCoupon = {
+        id: crypto.randomUUID(),
+        createdBy: companyId,
+        describe: "describe",
+        quantity: 0
+    }
+
+    await couponDAO.save(inputCoupon)
+
+    expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
 })
