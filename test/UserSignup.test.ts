@@ -48,6 +48,18 @@ test("Should do user signup by Stub", async function(){
     stubUserDAOGetById.restore()
 })
 
+test.each([undefined, null, "", "user"])("Should not do signup user with a invalid name",function(){
+    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
+    const inputSignup = {
+        name: "user",
+        cpf: "91015490069",
+        email: `user${Math.random()}@user`,
+        phone: "(99) 9999-9999"
+    }
+    expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid name"))
+    stubUserDAOGetByEmail.restore()
+})
+
 test("Should do user signup by Fake", async function(){
     const inputSignup = {
         name: "user user",
@@ -107,15 +119,6 @@ test("Should not do signup user with a email already exists", async function(){
 
     await userSignup.execute(inputSignup)
     await expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
-})
-
-test.each([undefined,null,"","user"])
-("Should do not signup with a invalid name", async function(name:any){
-    const inputSignup = {
-        email: `user${Math.random()}@user`,
-        name: name
-    }
-    await expect(() => userSignup.execute(inputSignup)).rejects.toThrow("Invalid name")
 })
 
 test.each([undefined,null,"","user.user"])
