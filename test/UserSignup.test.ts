@@ -98,7 +98,7 @@ test("Should do user signup by Mock", async function(){
     mockLogger.restore()
 })
 
-test.only("Should not do signup user with a email already exists", async function(){
+test("Should not do signup user with a email already exists", async function(){
     const inputSignup = {
         name: "user user",
         cpf: "91015490069",
