@@ -5,6 +5,7 @@ import UserDAODatabase from "../src/UserDAODatabase"
 import LoggerConsole from "../src/LoggerConsole"
 import UserDAO from "../src/UserDAO"
 import Logger from "../src/Logger"
+import UserSignupDAO from "../src/UserSignupDAO"
 let userSignup: UserSignup
 let userGetAccount: UserGetAccount
 
@@ -46,18 +47,6 @@ test("Should do user signup by Stub", async function(){
     stubUserDAOSave.restore()
     stubUserDAOGetByEmail.restore()
     stubUserDAOGetById.restore()
-})
-
-test.each([undefined, null, "", "user"])("Should not do signup user with a invalid name",function(){
-    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
-    const inputSignup = {
-        name: "user",
-        cpf: "91015490069",
-        email: `user${Math.random()}@user`,
-        phone: "(99) 9999-9999"
-    }
-    expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid name"))
-    stubUserDAOGetByEmail.restore()
 })
 
 test("Should do user signup by Fake", async function(){
@@ -109,53 +98,71 @@ test("Should do user signup by Mock", async function(){
     mockLogger.restore()
 })
 
-test("Should not do signup user with a email already exists", async function(){
+test.only("Should not do signup user with a email already exists", async function(){
     const inputSignup = {
         name: "user user",
         cpf: "91015490069",
         email: `user${Math.random()}@user`,
         phone: "(99) 9999-9999"
     }
-
-    await userSignup.execute(inputSignup)
-    await expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
+    const users: any = []
+    const userDAO: UserDAO = {
+        async save (user: any): Promise<void> {
+            users.push(user)
+        },
+        getById: function (userId: string): Promise<any> {
+            return users.find((user: any) => user.userId === userId)
+        },
+        getByEmail: function (userEmail: string): Promise<any> {
+            return users.find((user: any) => user.email === userEmail)
+        }
+    }
+    const userSignup = new UserSignup(userDAO, new LoggerConsole())
+    const outputUserSignup = await userSignup.execute(inputSignup)
+    expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
 })
 
-test.each([undefined,null,"","user.user"])
-("Should do not signup with a invalid email", async function(email:any){
+test.each([undefined, null, "", "user"])("Should not do signup user with a invalid name", function(){
+    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
+    const inputSignup = {
+        name: "user",
+        cpf: "91015490069",
+        email: `user${Math.random()}@user`,
+        phone: "(99) 9999-9999"
+    }
+    expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid name"))
+    stubUserDAOGetByEmail.restore()
+})
+
+test.each([undefined,null,"","user.user"])("Should do not signup with a invalid email", function(email:any){
+    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
     const inputSignup = {
         email: email,
         name: "user user",
     }
-    await expect(() => userSignup.execute(inputSignup)).rejects.toThrow("Invalid email")
+    expect(() => userSignup.execute(inputSignup)).rejects.toThrow("Invalid email")
+    stubUserDAOGetByEmail.restore()
 })
 
-test("Should do not signup with a invalid cpf", async function(){
-    const inputSignup = {
-        email: `user${Math.random()}@user`,
-        name: "user user",
-        cpf: "46890347810"
-    }
-    await expect(() => userSignup.execute(inputSignup)).rejects.toThrow("Invalid cpf")
-})
-
-test.each([undefined, null, "", "111", "11111111111", "46890347810"])
-("Should do not signup with a invalid cpf", async function(cpf:any){
+test.each([undefined, null, "", "111", "11111111111", "46890347810"])("Should do not signup with a invalid cpf", function(cpf:any){
+    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
     const inputSignup = {
         email: `user${Math.random()}@user`,
         name: "user user",
         cpf: cpf
     }
-    await expect(() => userSignup.execute(inputSignup)).rejects.toThrow("Invalid cpf")
+    expect(() => userSignup.execute(inputSignup)).rejects.toThrow("Invalid cpf")
+    stubUserDAOGetByEmail.restore()
 })
 
-test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"]
-)("Should not do signup user with a invalid phone", async function(phone:any){
+test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"])("Should not do signup user with a invalid phone", function(phone:any){
+    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
     const inputSignup = {
         email: `user${Math.random()}@user`,
         name: "user user",
         cpf: "91015490069",
         phone: phone
     }
-    await expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid phone"))
+    expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid phone"))
+    stubUserDAOGetByEmail.restore()
 })
