@@ -65,8 +65,6 @@ test("Should not consume a coupon with a invalid coupon quantity", async functio
         describe: "describe",
         quantity: 0
     }
-
     await couponDAO.save(inputCoupon)
-
     await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
 })
