@@ -5,7 +5,6 @@ import UserDAODatabase from "../src/UserDAODatabase"
 import LoggerConsole from "../src/LoggerConsole"
 import UserDAO from "../src/UserDAO"
 import Logger from "../src/Logger"
-import UserSignupDAO from "../src/UserSignupDAO"
 let userSignup: UserSignup
 let userGetAccount: UserGetAccount
 
