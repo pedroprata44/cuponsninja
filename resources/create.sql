@@ -28,7 +28,7 @@ create table data.coupon(
     createdBy uuid not null,
     describe text not null,
     quantity integer not null,
-    creationdate date CURRENT_DATE not null
+    creationdate date default CURRENT_DATE not null
 )
 select * from data.coupon
 drop table data.coupon
