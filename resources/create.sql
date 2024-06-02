@@ -7,7 +7,7 @@ create table data.user_account(
     name text not null,
     cpf text not null,
     phone text not null,
-    datesignup date default CURRENT_DATE not null
+    datesignup text not null
 )
 select * from data.user_account
 drop table data.user_account
@@ -18,7 +18,7 @@ create table data.company_account(
     name text not null,
     cnpj text not null,
     phone text not null,
-    datesignup date default CURRENT_DATE not null
+    datesignup text not null
 )
 select * from data.company_account
 drop table data.company_account
@@ -28,7 +28,7 @@ create table data.coupon(
     createdBy uuid not null,
     describe text not null,
     quantity integer not null,
-    creationdate date default CURRENT_DATE not null
+    creationdate text not null
 )
 select * from data.coupon
 drop table data.coupon

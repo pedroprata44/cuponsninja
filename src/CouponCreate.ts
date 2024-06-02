@@ -11,6 +11,7 @@ export default class CouponCreate{
         if(this.isInvalidDescribe(input.describe)) throw new Error("Invalid describe")
         if(this.isInvalidQuantity(input.quantity)) throw new Error("Invalid quantity")
         input.id = crypto.randomUUID()
+        input.creationDate = Date.call("")
         await this.couponCreateDAO.save(input)
         return{
             couponId: input.id

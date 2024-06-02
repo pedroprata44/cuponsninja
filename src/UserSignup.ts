@@ -17,7 +17,7 @@ export default class UserSignup{
         if(!validateCpf(input.cpf)) throw new Error("Invalid cpf")
         if(this.isInvalidPhone(input.phone)) throw new Error("Invalid phone")
         input.userId = crypto.randomUUID()
-        input.dateSignup = new Date()
+        input.dateSignup = Date.call("")
         await this.userSignupDAO.save(input)
         return{
             userId: input.userId    

@@ -4,7 +4,7 @@ import CouponDAO from "./CouponDAO";
 export default class CouponDAODatabase implements CouponDAO{
     async save(coupon: any): Promise<void> {
         const connection = pgPromise()("postgres://postgres:password@localhost:5432/cuponsninja")
-        await connection.query("insert into data.coupon (id, createdBy, describe, quantity) values ($1, $2, $3, $4)",[coupon.id, coupon.createdBy, coupon.describe, coupon.quantity])
+        await connection.query("insert into data.coupon (id, createdBy, describe, quantity, creationdate) values ($1, $2, $3, $4, $5)",[coupon.id, coupon.createdBy, coupon.describe, coupon.quantity, coupon.creationDate])
         connection.$pool.end()
     }
     async update(couponId: string){

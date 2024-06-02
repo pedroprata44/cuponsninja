@@ -17,7 +17,7 @@ export default class CompanySignup{
         if(!validateCnpj(input.cnpj)) throw new Error("Invalid cnpj")
         if(this.isInvalidPhone(input.phone)) throw new Error("Invalid phone")
         input.companyId = crypto.randomUUID()
-        input.dateSignup = new Date()
+        input.dateSignup = Date.call("")
         await this.companySignupDAO.save(input)
         return{
             companyId: input.companyId
