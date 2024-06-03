@@ -4,7 +4,6 @@ import sinon from "sinon"
 import UserDAODatabase from "../src/UserDAODatabase"
 import LoggerConsole from "../src/LoggerConsole"
 import UserDAO from "../src/UserDAO"
-import Logger from "../src/Logger"
 let userSignup: UserSignup
 let userGetAccount: UserGetAccount
 
@@ -13,6 +12,21 @@ beforeEach(() => {
     const logger = new LoggerConsole()
     userSignup = new UserSignup(userDAO, logger)
     userGetAccount = new UserGetAccount(userDAO)
+})
+
+test("Should do user signup", async function(){
+    const inputSignup = {
+        name: "user user",
+        cpf: "91015490069",
+        email: `user${Math.random()}@user`,
+        phone: "(99) 9999-9999"
+    }
+    const outputSignup = await userSignup.execute(inputSignup)
+    const outputGetAccount = await userGetAccount.execute(outputSignup.userId)
+
+    expect(outputGetAccount.id).toBeDefined()
+    expect(outputGetAccount.name).toBe(inputSignup.name)
+    expect(outputGetAccount.email).toBe(inputSignup.email)
 })
 
 test("Should not do signup user with a email already exists", async function(){

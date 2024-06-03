@@ -25,7 +25,7 @@ beforeEach(() => {
     couponCreate = new CouponCreate(logger, couponDAO, companyDAO)
 })
 
-test("Do user signup by api", async function(){
+test("Should do user signup by api", async function(){
     const inputSignup = {
         name: "user user",
         cpf: "91015490069",
