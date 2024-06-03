@@ -3,7 +3,7 @@ import UserDAO from "./UserDAO"
 export default class UserDAODatabase implements UserDAO{
     async save(user: any){
         const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
-        await connection.query("insert into data.user_account (name, email, cpf, phone, id, datesignup) values ($1, $2, $3, $4, $5, $6)", [user.name, user.email, user.cpf, user.phone, user.userId, user.dateSignup])
+        await connection.query("insert into data.user_account (name, email, cpf, phone, id, datesignup) values ($1, $2, $3, $4, $5, $6)", [user.name, user.email, user.cpf, user.phone, user.id, user.dateSignup])
         connection.$pool.end()
     }
     async getById(userId: string){
