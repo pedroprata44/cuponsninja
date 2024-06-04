@@ -5,7 +5,6 @@ import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"
 import CompanySignup from "../src/CompanySignup"
 import CouponConsume from "../src/CouponConsume"
-import CouponCreateDAO from "../src/CouponCreateDAO"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
@@ -63,7 +62,8 @@ test("Should not consume a coupon with a invalid coupon quantity", async functio
         id: crypto.randomUUID(),
         createdBy: companyId,
         describe: "describe",
-        quantity: 0
+        quantity: 0,
+        creationDate: Date.call("")
     }
     await couponDAO.save(inputCoupon)
     await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))

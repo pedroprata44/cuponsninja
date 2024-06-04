@@ -1,17 +1,19 @@
 import UserGetAccount from "../src/UserGetAccount"
 import UserSignup from "../src/UserSignup"
 import sinon from "sinon"
-import UserDAODatabase from "../src/UserDAODatabase"
+import UserRepositoryDatabase from "../src/UserRepositoryDatabase"
 import LoggerConsole from "../src/LoggerConsole"
-import UserDAO from "../src/UserDAO"
+import UserRepository from "../src/UserRepository"
+
+
 let userSignup: UserSignup
 let userGetAccount: UserGetAccount
 
 beforeEach(() => {
-    const userDAO = new UserDAODatabase()
+    const userRepositoryDatabase = new UserRepositoryDatabase()
     const logger = new LoggerConsole()
-    userSignup = new UserSignup(userDAO, logger)
-    userGetAccount = new UserGetAccount(userDAO)
+    userSignup = new UserSignup(userRepositoryDatabase, logger)
+    userGetAccount = new UserGetAccount(userRepositoryDatabase)
 })
 
 test("Should do user signup", async function(){
@@ -23,7 +25,6 @@ test("Should do user signup", async function(){
     }
     const outputSignup = await userSignup.execute(inputSignup)
     const outputGetAccount = await userGetAccount.execute(outputSignup.userId)
-
     expect(outputGetAccount.id).toBeDefined()
     expect(outputGetAccount.name).toBe(inputSignup.name)
     expect(outputGetAccount.email).toBe(inputSignup.email)
@@ -31,7 +32,7 @@ test("Should do user signup", async function(){
 
 test("Should not do signup user with a email already exists", async function(){
     const users: any = []
-    const userDAO: UserDAO = {
+    const userRepository: UserRepository = {
         async save (user: any): Promise<void> {
             users.push(user)
         },
@@ -48,13 +49,13 @@ test("Should not do signup user with a email already exists", async function(){
         email: `user${Math.random()}@user`,
         phone: "(99) 9999-9999"
     }
-    const userSignup = new UserSignup(userDAO, new LoggerConsole())
+    const userSignup = new UserSignup(userRepository, new LoggerConsole())
     await userSignup.execute(inputSignup)
     expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
 })
 
 test.each([undefined, null, "", "user"])("Should not do signup user with a invalid name", function(){
-    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubUserDAOGetByEmail = sinon.stub(UserRepositoryDatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         name: "user",
         cpf: "91015490069",
@@ -66,7 +67,7 @@ test.each([undefined, null, "", "user"])("Should not do signup user with a inval
 })
 
 test.each([undefined,null,"","user.user"])("Should do not signup with a invalid email", function(email:any){
-    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubUserDAOGetByEmail = sinon.stub(UserRepositoryDatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         email: email,
         name: "user user",
@@ -76,7 +77,7 @@ test.each([undefined,null,"","user.user"])("Should do not signup with a invalid 
 })
 
 test.each([undefined, null, "", "111", "11111111111", "46890347810"])("Should do not signup with a invalid cpf", function(cpf:any){
-    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubUserDAOGetByEmail = sinon.stub(UserRepositoryDatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         email: `user${Math.random()}@user`,
         name: "user user",
@@ -87,7 +88,7 @@ test.each([undefined, null, "", "111", "11111111111", "46890347810"])("Should do
 })
 
 test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"])("Should not do signup user with a invalid phone", function(phone:any){
-    const stubUserDAOGetByEmail = sinon.stub(UserDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubUserDAOGetByEmail = sinon.stub(UserRepositoryDatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         email: `user${Math.random()}@user`,
         name: "user user",
