@@ -1,12 +1,13 @@
-import UserGetDAO from "./UserGetDAO"
+import UserRepository from "./UserRepository"
 
 export default class UserGetAccount{
-    userGetDAO: UserGetDAO
-    constructor(userGetDAO: UserGetDAO){
-        this.userGetDAO = userGetDAO
+    userRepository: UserRepository
+    constructor(userRepository: UserRepository){
+        this.userRepository = userRepository
     }
     async execute(id:string){
-        const user = await this.userGetDAO.getById(id)
+        const user = await this.userRepository.getById(id)
+        if(!user) throw new Error("This user doesn't exists")
         return user
     }
 }
