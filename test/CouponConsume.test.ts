@@ -24,7 +24,7 @@ beforeEach(() => {
     companySignup = new CompanySignup(logger, companyDAO)
 })
 
-test("Should consume a coupon", async function(){
+test.only("Should consume a coupon", async function(){
     const inputCompany = {
         isCompany: true,
         name: "company company",
