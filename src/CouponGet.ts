@@ -1,12 +1,16 @@
-import CouponGetDAO from "./CouponGetDAO";
+import CompanyRepository from "./CompanyRepository";
+import CouponRepository from "./CouponRepository";
 
 export default class CouponGet{
-    couponDAO: CouponGetDAO
-    constructor(couponDAO:CouponGetDAO){
-        this.couponDAO = couponDAO
+    couponRepository: CouponRepository
+    companyRepository: CompanyRepository
+    constructor(couponRepository:CouponRepository, companyRepository: CompanyRepository){
+        this.couponRepository = couponRepository
+        this.companyRepository = companyRepository
     }
     async execute(couponId: string){
-        const coupon = this.couponDAO.getById(couponId)
+        const coupon = await this.couponRepository.getById(couponId, this.companyRepository)
+        if(!coupon) throw new Error("This coupon doesn't exists") 
         return coupon
     }
 }

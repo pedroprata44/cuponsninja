@@ -6,9 +6,10 @@ import CompanySignup from "./CompanySignup"
 import UserDAODatabase from "./UserRepositoryDatabase"
 import LoggerConsole from "./LoggerConsole"
 import CompanyDAODatabase from "./CompanyRepositoryDatabase"
-import CouponDAODatabase from "./CouponDAODatabase"
+import CouponDAODatabase from "./CouponRepositoryDatabase"
 import CouponCreate from "./CouponCreate"
 import CouponGet from "./CouponGet"
+import CompanyRepositoryDatabase from "./CompanyRepositoryDatabase"
 const app = express()
 app.use(express.json())
 
@@ -59,9 +60,10 @@ app.post("/couponcreate", async function(req: Request, res: Response){
 })
 
 app.get("/couponget/:id", async function(req: Request, res: Response){
+    const companyRepository = new CompanyRepositoryDatabase()
     const input = req.params.id
     const couponDAO = new CouponDAODatabase()
-    const couponGet = new CouponGet(couponDAO)
+    const couponGet = new CouponGet(couponDAO, companyRepository)
     const output = await couponGet.execute(input)
     res.json(output)
 })
