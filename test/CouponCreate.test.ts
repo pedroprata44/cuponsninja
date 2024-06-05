@@ -1,4 +1,4 @@
-import CompanyDAODatabase from "../src/CompanyDAODatabase"
+import CompanyDAODatabase from "../src/CompanyRepositoryDatabase"
 import CouponDAODatabase from "../src/CouponDAODatabase"
 import CouponCreate from "../src/CouponCreate"
 import CouponGet from "../src/CouponGet"

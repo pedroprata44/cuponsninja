@@ -2,8 +2,8 @@ import sinon from "sinon"
 import CompanyGetDAO from "../src/CompanyGetAccount"
 import CompanySignup from "../src/CompanySignup"
 import LoggerConsole from "../src/LoggerConsole"
-import CompanyDAODatabase from "../src/CompanyDAODatabase"
-import CompanyDAO from "../src/CompanyDAO"
+import CompanyDAODatabase from "../src/CompanyRepositoryDatabase"
+import CompanyDAO from "../src/CompanyRepository"
 
 let companySignup: CompanySignup
 let companyGetAccount: CompanyGetDAO
@@ -13,6 +13,19 @@ beforeEach(() => {
     const companyDAO = new CompanyDAODatabase()
     companySignup = new CompanySignup(logger, companyDAO)
     companyGetAccount = new CompanyGetDAO(companyDAO)
+})
+
+test("Should do company signup", async function(){
+    const inputSignup = {
+        name: "company company",
+        cnpj: "83800838000197",
+        email: `company${Math.random()}@company`,
+        phone: "(99) 9999-9999"
+    }
+    const outputSignup = await companySignup.execute(inputSignup)
+    const outputGetCompany = await companyGetAccount.execute(outputSignup.companyId)
+    expect(outputGetCompany.id).toBeDefined()
+    expect(outputGetCompany.name).toBe(inputSignup.name)
 })
 
 test("Should not do sign up company with a email already exists", async function(){
@@ -28,7 +41,6 @@ test("Should not do sign up company with a email already exists", async function
         }
     }
     const inputSignup = {
-        isCompany: true,
         name: "company company",
         cnpj: "83800838000197",
         email: `company${Math.random()}@company`,
@@ -40,7 +52,7 @@ test("Should not do sign up company with a email already exists", async function
 })
 
 test.each([undefined, null, "", "company"])("Shoud not do signup company with a invalid name", function(name:any){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         isCompany: true,
         email: `company${Math.random()}@company`,
@@ -51,7 +63,7 @@ test.each([undefined, null, "", "company"])("Shoud not do signup company with a 
 })
 
 test.each([undefined, null, "", "company.company"])("Should not do signup company with a invalid email", async function(email:any){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         isCompany: true,
         email: email,
@@ -62,7 +74,7 @@ test.each([undefined, null, "", "company.company"])("Should not do signup compan
 })
 
 test("Should not do signup company with a invalid cnpj", async function(){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         isCompany: true,
         email: `company${Math.random()}@company`,
@@ -74,7 +86,7 @@ test("Should not do signup company with a invalid cnpj", async function(){
 })
 
 test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"])("Should not do signup company with a invalid phone", async function(phone:any){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(null)
+    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
     const inputSignup = {
         isCompany: true,
         email: `company${Math.random()}@company`,

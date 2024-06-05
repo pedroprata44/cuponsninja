@@ -1,8 +1,8 @@
 import axios from "axios"
 import CompanySignup from "../src/CompanySignup"
 import LoggerConsole from "../src/LoggerConsole"
-import CompanyDAO from "../src/CompanyDAO"
-import CompanyDAODatabase from "../src/CompanyDAODatabase"
+import CompanyRepository from "../src/CompanyRepository"
+import companyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
 import CouponCreate from "../src/CouponCreate"
 import CouponDAO from "../src/CouponDAO"
 import CouponDAODatabase from "../src/CouponDAODatabase"
@@ -12,17 +12,17 @@ axios.defaults.validateStatus = function (){
 
 let companySignup: CompanySignup
 let logger: LoggerConsole
-let companyDAO: CompanyDAO
+let companyRepository: CompanyRepository
 let couponCreate: CouponCreate
 let couponDAO: CouponDAO
 
 
 beforeEach(() => {
     logger = new LoggerConsole()
-    companyDAO = new CompanyDAODatabase()
-    companySignup = new CompanySignup(logger, companyDAO)
+    companyRepository = new companyRepositoryDatabase()
+    companySignup = new CompanySignup(logger, companyRepository)
     couponDAO = new CouponDAODatabase()
-    couponCreate = new CouponCreate(logger, couponDAO, companyDAO)
+    couponCreate = new CouponCreate(logger, couponDAO, companyRepository)
 })
 
 test("Should do user signup by api", async function(){
