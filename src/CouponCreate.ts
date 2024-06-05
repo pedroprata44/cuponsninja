@@ -1,9 +1,9 @@
-import CompanyGetDAO from "./CompanyGetDAO";
+import CompanyRepository from "./CompanyRepository";
 import Logger from "./Logger";
 import CouponCreateDAO from "./CouponCreateDAO";
 
 export default class CouponCreate{
-    constructor(private logger: Logger, private couponCreateDAO: CouponCreateDAO, private getCompanyDAO: CompanyGetDAO){
+    constructor(private logger: Logger, private couponCreateDAO: CouponCreateDAO, private companyRepository: CompanyRepository){
     }
     async execute(input:any){
         this.logger.log(input)
@@ -27,7 +27,7 @@ export default class CouponCreate{
     }
     async isInvalidCreatedBy(createdBy: string){
         if(!createdBy) return true
-        const company = await this.getCompanyDAO.getById(createdBy)
+        const company = await this.companyRepository.getById(createdBy)
         if(!company) return true
     }
 }
