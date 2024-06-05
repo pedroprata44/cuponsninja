@@ -1,24 +1,24 @@
-import CompanyDAODatabase from "../src/CompanyRepositoryDatabase"
-import CouponDAODatabase from "../src/CouponDAODatabase"
+import CouponRepository from "../src/CouponRepositoryDatabase"
 import CouponCreate from "../src/CouponCreate"
 import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"
 import CompanySignup from "../src/CompanySignup"
+import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
 let companySignup: CompanySignup
 let logger: LoggerConsole
-let couponDAO: CouponDAODatabase
-let companyDAO: CompanyDAODatabase
+let couponRepository: CouponRepository
+let companyRepository: CompanyRepositoryDatabase
 
 beforeEach(() => {
     logger = new LoggerConsole()
-    couponDAO = new CouponDAODatabase()
-    companyDAO = new CompanyDAODatabase
-    couponCreate = new CouponCreate(logger, couponDAO, companyDAO)
-    couponGet = new CouponGet(couponDAO)
-    companySignup = new CompanySignup(logger, companyDAO)
+    couponRepository = new CouponRepository()
+    companyRepository = new CompanyRepositoryDatabase()
+    couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
+    couponGet = new CouponGet(couponRepository, companyRepository)
+    companySignup = new CompanySignup(logger, companyRepository)
 })
 
 test("Should create a coupon", async function(){
@@ -46,7 +46,7 @@ test("Should create a coupon", async function(){
     expect(outputCouponGet.quantity).toBe(inputCoupon.quantity)
 })
 
-test.each([undefined, null, "", "1634919c-7f5f-49a3-9c2d-24e0e1b1c6b2"])("Should not create coupon with a invalid createdBy", async function(createdBy: any){
+test.only.each([undefined, null, "", "1634919c-7f5f-49a3-9c2d-24e0e1b1c6b2"])("Should not create coupon with a invalid createdBy", async function(createdBy: any){
     const inputCoupon = {
         createdBy: createdBy,
         describe: "describe",

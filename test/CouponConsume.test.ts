@@ -1,5 +1,5 @@
 import CompanyDAODatabase from "../src/CompanyRepositoryDatabase"
-import CouponDAODatabase from "../src/CouponDAODatabase"
+import CouponDAODatabase from "../src/CouponRepositoryDatabase"
 import CouponCreate from "../src/CouponCreate"
 import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"

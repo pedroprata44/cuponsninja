@@ -4,8 +4,8 @@ import LoggerConsole from "../src/LoggerConsole"
 import CompanyRepository from "../src/CompanyRepository"
 import companyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
 import CouponCreate from "../src/CouponCreate"
-import CouponDAO from "../src/CouponDAO"
-import CouponDAODatabase from "../src/CouponDAODatabase"
+import CouponDAO from "../src/CouponRepository"
+import CouponDAODatabase from "../src/CouponRepositoryDatabase"
 axios.defaults.validateStatus = function (){
     return true
 }
