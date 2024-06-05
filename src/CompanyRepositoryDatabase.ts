@@ -12,13 +12,13 @@ export default class CompanyRepositoryDatabase implements CompanyRepository{
         const [company] = await connection.query("select * from data.company_account where id = $1", [companyId])
         connection.$pool.end()
         if(!company) return undefined
-        return company
+        return Company.restore(company.id, company.name, company.cnpj, company.email, company.phone)
     }
     async getByEmail(companyEmail: string): Promise<Company | undefined>{
         const connection = pgp()("postgres://postgres:password@localhost:5432/cuponsninja")
         const [company] = await connection.query("select * from data.company_account where email = $1", [companyEmail])
         connection.$pool.end()
         if(!company) return undefined
-        return company
+        return Company.restore(company.id, company.name, company.cnpj, company.email, company.phone)
     }
 }
