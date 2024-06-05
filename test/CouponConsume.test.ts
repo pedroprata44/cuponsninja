@@ -1,5 +1,5 @@
-import CompanyDAODatabase from "../src/CompanyRepositoryDatabase"
-import CouponDAODatabase from "../src/CouponRepositoryDatabase"
+import CompanyRepository from "../src/CompanyRepositoryDatabase"
+import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase"
 import CouponCreate from "../src/CouponCreate"
 import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"
@@ -11,20 +11,20 @@ let couponGet: CouponGet
 let couponConsume: CouponConsume
 let companySignup: CompanySignup
 let logger: LoggerConsole
-let couponDAO: CouponDAODatabase
-let companyDAO: CompanyDAODatabase
+let couponRepository: CouponRepositoryDatabase
+let companyRepository: CompanyRepository
 
 beforeEach(() => {
     logger = new LoggerConsole()
-    couponDAO = new CouponDAODatabase()
-    companyDAO = new CompanyDAODatabase
-    couponCreate = new CouponCreate(logger, couponDAO, companyDAO)
-    couponGet = new CouponGet(couponDAO)
-    couponConsume = new CouponConsume(couponDAO)
-    companySignup = new CompanySignup(logger, companyDAO)
+    couponRepository = new CouponRepositoryDatabase()
+    companyRepository = new CompanyRepository()
+    couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
+    couponGet = new CouponGet(couponRepository)
+    couponConsume = new CouponConsume(couponRepository)
+    companySignup = new CompanySignup(logger, companyRepository)
 })
 
-test.only("Should consume a coupon", async function(){
+test("Should consume a coupon", async function(){
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -36,7 +36,7 @@ test.only("Should consume a coupon", async function(){
     const inputCoupon = {
         createdBy: companyId,
         describe: "describe",
-        quantity: 1
+        quantity: 2
     }
     const outputCouponCreate = await couponCreate.execute(inputCoupon)
     const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
@@ -46,7 +46,7 @@ test.only("Should consume a coupon", async function(){
 })
 
 test("Should not consume a coupon with a invalid coupon id", async function(){
-    await expect(() => couponConsume.execute(crypto.randomUUID())).rejects.toThrow(new Error("This coupon id not exists"))
+    await expect(() => couponConsume.execute(crypto.randomUUID())).rejects.toThrow(new Error("This coupon not exists"))
 })
 
 test("Should not consume a coupon with a invalid coupon quantity", async function(){
@@ -65,6 +65,6 @@ test("Should not consume a coupon with a invalid coupon quantity", async functio
         quantity: 0,
         creationDate: Date.call("")
     }
-    await couponDAO.save(inputCoupon)
-    await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
+    await couponRepository.save(inputCoupon)
+    await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("Invalid quantity"))
 })
