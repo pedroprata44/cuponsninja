@@ -41,7 +41,7 @@ test("Should do user signup by api", async function(){
     expect(outputGetAccount.email).toBe(inputSignup.email)
 })
 
-test("Do company signup by api", async function(){
+test("Should do company signup by api", async function(){
     const inputSignup = {
         isCompany: true,
         name: "company company",
@@ -58,7 +58,7 @@ test("Do company signup by api", async function(){
     expect(outputGetAccount.email).toBe(inputSignup.email)
 })
 
-test("Do coupon create by api", async function(){
+test("Should create a coupon by api", async function(){
     
     const inputSignup = {
         isCompany: true,
