@@ -9,5 +9,8 @@ export default class CouponConsume{
         if(!coupon.quantity) throw new Error("This coupon doesn't have enough quantity to be consumed")
         --coupon.quantity
         await this.couponRepository.update(coupon.quantity, coupon.id)
+        return{
+            couponId: coupon.id
+        }
     }
 }

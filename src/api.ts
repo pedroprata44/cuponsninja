@@ -1,39 +1,47 @@
 import express, {Request, Response} from "express"
-import UserGetAccount from "./UserGetAccount"
-import CompanyGetAccount from "./CompanyGetAccount"
 import UserSignup from "./UserSignup"
+import UserGetAccount from "./UserGetAccount"
+import UserRepositoryDatabase from "./UserRepositoryDatabase"
 import CompanySignup from "./CompanySignup"
-import UserDAODatabase from "./UserRepositoryDatabase"
+import CompanyGetAccount from "./CompanyGetAccount"
+import CompanyRepositoryDatabase from "./CompanyRepositoryDatabase"
 import LoggerConsole from "./LoggerConsole"
-import CompanyDAODatabase from "./CompanyRepositoryDatabase"
-import CouponDAODatabase from "./CouponRepositoryDatabase"
 import CouponCreate from "./CouponCreate"
 import CouponGet from "./CouponGet"
-import CompanyRepositoryDatabase from "./CompanyRepositoryDatabase"
+import CouponRepositoryDatabase from "./CouponRepositoryDatabase"
+import CouponConsume from "./CouponConsume"
 const app = express()
 app.use(express.json())
 
 app.post("/signup/user", async function (req: Request, res: Response){
     try{
         const input = req.body
-        const userDAO = new UserDAODatabase()
+        const userRepository = new UserRepositoryDatabase()
         const logger = new LoggerConsole()
-        const userSignup = new UserSignup(userDAO, logger)
+        const userSignup = new UserSignup(userRepository, logger)
         const output = await userSignup.execute(input)
         res.json(output)
-    } catch(e:any){
-        res.status(422).json({
+        } catch(e:any){
+            res.status(422).json({
             message: e.message
-        })
-    }
+            })
+            }
+})
+
+app.get("/accounts/user/:id", async function(req: Request, res: Response){
+    const input = req.params.id
+    const userRepository = new UserRepositoryDatabase()
+    const userGetAccount = new UserGetAccount(userRepository)
+    const output = await userGetAccount.execute(input)
+    res.json(output)
 })
 
 app.post("/signup/company", async function (req: Request, res: Response){
     try{
         const input = req.body
         const logger = new LoggerConsole()
-        const companyDAO = new CompanyDAODatabase()
-        const companySignup = new CompanySignup(logger, companyDAO)
+        const companyRepository = new CompanyRepositoryDatabase()
+        const companySignup = new CompanySignup(logger, companyRepository)
         const output = await companySignup.execute(input)
         res.json(output)
     } catch(e:any){
@@ -43,13 +51,21 @@ app.post("/signup/company", async function (req: Request, res: Response){
     }
 })
 
+app.get("/accounts/company/:id", async function(req: Request, res: Response){
+    const input = req.params.id
+    const companyRepository = new CompanyRepositoryDatabase()
+    const companyGetAccount = new CompanyGetAccount(companyRepository)
+    const output = await companyGetAccount.execute(input)
+    res.json(output)
+})
+
 app.post("/couponcreate", async function(req: Request, res: Response){
     try{
         const input = req.body
         const logger = new LoggerConsole()
-        const couponDAO = new CouponDAODatabase()
-        const companyDAO = new CompanyDAODatabase()
-        const couponCreate = new CouponCreate(logger, couponDAO, companyDAO)
+        const couponRepository = new CouponRepositoryDatabase()
+        const companyRepository = new CompanyRepositoryDatabase()
+        const couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
         const output = await couponCreate.execute(input)
         res.json(output)
     } catch(e: any){
@@ -60,27 +76,17 @@ app.post("/couponcreate", async function(req: Request, res: Response){
 })
 
 app.get("/couponget/:id", async function(req: Request, res: Response){
-    const companyRepository = new CompanyRepositoryDatabase()
     const input = req.params.id
-    const couponDAO = new CouponDAODatabase()
-    const couponGet = new CouponGet(couponDAO, companyRepository)
+    const couponRepository = new CouponRepositoryDatabase()
+    const couponGet = new CouponGet(couponRepository)
     const output = await couponGet.execute(input)
     res.json(output)
 })
 
-app.get("/accounts/user/:id", async function(req: Request, res: Response){
-    const input = req.params.id
-    const userDAO = new UserDAODatabase()
-    const userGetAccount = new UserGetAccount(userDAO)
-    const output = await userGetAccount.execute(input)
-    res.json(output)
-})
-
-app.get("/accounts/company/:id", async function(req: Request, res: Response){
-    const input = req.params.id
-    const companyDAO = new CompanyDAODatabase()
-    const companyGetAccount = new CompanyGetAccount(companyDAO)
-    const output = await companyGetAccount.execute(input)
+app.post("/couponconsume/:id", async function (req: Request, res: Response){
+    const id = req.params.id
+    const couponConsume = new CouponConsume(new CouponRepositoryDatabase())
+    const output = await couponConsume.execute(id)
     res.json(output)
 })
 
