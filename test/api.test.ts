@@ -84,3 +84,33 @@ test("Should create a coupon by api", async function(){
     expect(outputCouponGet.describe).toBe(inputCreate.describe)
     expect(outputCouponGet.quantity).toBe(inputCreate.quantity)
 })
+
+test("Should consume a coupon by api", async function(){
+    const inputSignup = {
+        isCompany: true,
+        name: "company company",
+        cnpj: "83800838000197",
+        email: `company${Math.random()}@company`,
+        phone: "(99) 9999-9999"
+    }
+    const companyId = (await companySignup.execute(inputSignup)).companyId
+    
+    const inputCreate = {
+        createdBy: companyId,
+        describe: "describe",
+        quantity: 3
+    }
+
+    const responseCouponCreate = await axios.post("http://localhost:3000/couponcreate", inputCreate)
+    const outputCouponCreate = responseCouponCreate.data
+    const responseCouponGet = await axios.get(`http://localhost:3000/couponget/${outputCouponCreate.couponId}`)
+    const outputCouponGet = responseCouponGet.data
+
+    const responseCouponConsume = await axios.post(`http://localhost:3000/couponconsume/${outputCouponGet.id}`)
+    const outputCouponConsume = responseCouponConsume.data
+
+    const responseCouponGetAfterConsume = await axios.get(`http://localhost:3000/couponget/${outputCouponConsume.couponId}`)
+    const outputCouponGetAfterConsume = responseCouponGetAfterConsume.data
+
+    expect(outputCouponGetAfterConsume.quantity).toBe(2)
+})
