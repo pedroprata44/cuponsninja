@@ -22,7 +22,7 @@ export default class Coupon{
     }
     isInvalidQuantity(quantity: number){
         if(!quantity) return true
-        return !(quantity >= 0)
+        return !(quantity > 0)
     }
     isInvalidDescribe(describe: string){
         if(!describe) return true
