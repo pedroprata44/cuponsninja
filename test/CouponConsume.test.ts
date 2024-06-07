@@ -5,6 +5,7 @@ import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"
 import CompanySignup from "../src/CompanySignup"
 import CouponConsume from "../src/CouponConsume"
+import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
@@ -12,12 +13,12 @@ let couponConsume: CouponConsume
 let companySignup: CompanySignup
 let logger: LoggerConsole
 let couponRepository: CouponRepositoryDatabase
-let companyRepository: CompanyRepository
+let companyRepository: CompanyRepositoryDatabase
 
 beforeEach(() => {
     logger = new LoggerConsole()
     couponRepository = new CouponRepositoryDatabase()
-    companyRepository = new CompanyRepository()
+    companyRepository = new CompanyRepositoryDatabase()
     couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
     couponGet = new CouponGet(couponRepository)
     couponConsume = new CouponConsume(couponRepository)
