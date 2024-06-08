@@ -67,5 +67,5 @@ test("Should not consume a coupon with a invalid coupon quantity", async functio
         creationDate: Date.call("")
     }
     await couponRepository.save(inputCoupon)
-    await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("Invalid quantity"))
+    await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
 })
