@@ -5,7 +5,7 @@ import Company from "./Company"
 export default class CompanySignup{
     constructor(private logger: Logger, private companyRepository: CompanyRepository){
     }
-    async execute(input:any){
+    async execute(input:Input): Promise<Output>{
         this.logger.log(`signup company ${input.name}`)
         const Existingcompany = await this.companyRepository.getByEmail(input.email)
         if(Existingcompany) throw new Error("This email already exists")
@@ -15,4 +15,14 @@ export default class CompanySignup{
             companyId: company.id
         }
     }
+}
+
+type Input = {
+    name: string,
+    cnpj: string,
+    email: string,
+    phone: string
+}
+type Output = {
+    companyId: string
 }

@@ -7,7 +7,7 @@ export default class UserSignup{
     constructor(private userRepository: UserRepository, private logger: Logger){
     }
 
-    async execute(input:any){
+    async execute(input:Input):Promise<Output>{
         this.logger.log(`signup user ${input.name}`)
         const existingUser = await this.userRepository.getByEmail(input.email)
         if(existingUser) throw new Error("This email already exists")
@@ -17,4 +17,15 @@ export default class UserSignup{
             userId: user.id
         }
     }
+}
+
+type Input = {
+    name: string,
+    cpf: string,
+    email: string,
+    phone: string
+}
+
+type Output = {
+    userId: string
 }
