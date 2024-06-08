@@ -1,28 +1,29 @@
 import AddToCoupon from "../src/AddToCoupon"
 import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
 import CompanySignup from "../src/CompanySignup"
-import CouponConsume from "../src/CouponConsume"
 import CouponCreate from "../src/CouponCreate"
 import CouponGet from "../src/CouponGet"
 import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase"
+import DatabaseConnection from "../src/DatabaseConnection"
 import LoggerConsole from "../src/LoggerConsole"
+import PgPromiseAdapter from "../src/PgPromiseAdapter"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
-let couponConsume: CouponConsume
 let addToCoupon: AddToCoupon
 let companySignup: CompanySignup
 let logger: LoggerConsole
 let couponRepository: CouponRepositoryDatabase
 let companyRepository: CompanyRepositoryDatabase
+let databaseConnection: DatabaseConnection
 
 beforeEach(() => {
     logger = new LoggerConsole()
-    couponRepository = new CouponRepositoryDatabase()
-    companyRepository = new CompanyRepositoryDatabase()
+    databaseConnection = new PgPromiseAdapter()
+    couponRepository = new CouponRepositoryDatabase(databaseConnection)
+    companyRepository = new CompanyRepositoryDatabase(databaseConnection)
     couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
     couponGet = new CouponGet(couponRepository)
-    couponConsume = new CouponConsume(couponRepository)
     addToCoupon = new AddToCoupon(couponRepository)
     companySignup = new CompanySignup(logger, companyRepository)
 })
@@ -48,4 +49,8 @@ test("Should add to a coupon", async function(){
     const outputCouponGetAfterAddTo = await couponGet.execute(outputCouponGet.id)
 
     expect(outputCouponGetAfterAddTo.quantity).toBe(inputCoupon.quantity + 10)
+})
+
+afterEach(async () => {
+    await databaseConnection.close()
 })

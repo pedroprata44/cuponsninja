@@ -1,18 +1,23 @@
-import sinon from "sinon"
-import CompanyGetDAO from "../src/CompanyGetAccount"
 import CompanySignup from "../src/CompanySignup"
 import LoggerConsole from "../src/LoggerConsole"
-import CompanyDAODatabase from "../src/CompanyRepositoryDatabase"
+import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
 import CompanyDAO from "../src/CompanyRepository"
+import DatabaseConnection from "../src/DatabaseConnection"
+import PgPromiseAdapter from "../src/PgPromiseAdapter"
+import CompanyRepository from "../src/CompanyRepository"
+import CompanyGetAccount from "../src/CompanyGetAccount"
 
 let companySignup: CompanySignup
-let companyGetAccount: CompanyGetDAO
+let companyRepository: CompanyRepository
+let databaseConnection: DatabaseConnection
+let companyGetAccount: CompanyGetAccount
 
 beforeEach(() => {
     const logger = new LoggerConsole()
-    const companyDAO = new CompanyDAODatabase()
-    companySignup = new CompanySignup(logger, companyDAO)
-    companyGetAccount = new CompanyGetDAO(companyDAO)
+    databaseConnection = new PgPromiseAdapter()
+    companyRepository = new CompanyRepositoryDatabase(databaseConnection)
+    companySignup = new CompanySignup(logger, companyRepository)
+    companyGetAccount = new CompanyGetAccount(companyRepository)
 })
 
 test("Should do company signup", async function(){
@@ -49,6 +54,10 @@ test("Should not do sign up company with a email already exists", async function
     const companySignup = new CompanySignup(new LoggerConsole(), companyDAO)
     await companySignup.execute(inputSignup)
     await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
+})
+
+afterEach(async () => {
+    await databaseConnection.close()
 })
 
 // test.each([undefined, null, "", "company"])("Shoud not do signup company with a invalid name", function(name:any){

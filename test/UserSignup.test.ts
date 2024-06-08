@@ -1,15 +1,19 @@
 import UserGetAccount from "../src/UserGetAccount"
 import UserSignup from "../src/UserSignup"
-import UserRepositoryDatabase from "../src/UserRepositoryDatabase"
 import LoggerConsole from "../src/LoggerConsole"
+import UserRepositoryDatabase from "../src/UserRepositoryDatabase"
 import UserRepository from "../src/UserRepository"
+import PgPromiseAdapter from "../src/PgPromiseAdapter"
+import DatabaseConnection from "../src/DatabaseConnection"
 
 
 let userSignup: UserSignup
 let userGetAccount: UserGetAccount
+let databaseConnection: DatabaseConnection
 
 beforeEach(() => {
-    const userRepositoryDatabase = new UserRepositoryDatabase()
+    databaseConnection = new PgPromiseAdapter()
+    const userRepositoryDatabase = new UserRepositoryDatabase(databaseConnection)
     const logger = new LoggerConsole()
     userSignup = new UserSignup(userRepositoryDatabase, logger)
     userGetAccount = new UserGetAccount(userRepositoryDatabase)
@@ -51,6 +55,10 @@ test("Should not do signup user with a email already exists", async function(){
     const userSignup = new UserSignup(userRepository, new LoggerConsole())
     await userSignup.execute(inputSignup)
     expect(() => userSignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
+})
+
+afterEach(async () => {
+    await databaseConnection.close()
 })
 
 // test.each([undefined, null, "", "user"])("Should not do signup user with a invalid name", function(){

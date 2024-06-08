@@ -4,8 +4,10 @@ import LoggerConsole from "../src/LoggerConsole"
 import CompanyRepository from "../src/CompanyRepository"
 import companyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
 import CouponCreate from "../src/CouponCreate"
-import CouponDAO from "../src/CouponRepository"
-import CouponDAODatabase from "../src/CouponRepositoryDatabase"
+import CouponRepository from "../src/CouponRepository"
+import couponRepositoryDatabase from "../src/CouponRepositoryDatabase"
+import DatabaseConnection from "../src/DatabaseConnection"
+import PgPromiseAdapter from "../src/PgPromiseAdapter"
 axios.defaults.validateStatus = function (){
     return true
 }
@@ -14,15 +16,17 @@ let companySignup: CompanySignup
 let logger: LoggerConsole
 let companyRepository: CompanyRepository
 let couponCreate: CouponCreate
-let couponDAO: CouponDAO
+let couponRepository: CouponRepository
+let databaseConnection: DatabaseConnection
 
 
 beforeEach(() => {
     logger = new LoggerConsole()
-    companyRepository = new companyRepositoryDatabase()
+    databaseConnection = new PgPromiseAdapter()
+    companyRepository = new companyRepositoryDatabase(databaseConnection)
     companySignup = new CompanySignup(logger, companyRepository)
-    couponDAO = new CouponDAODatabase()
-    couponCreate = new CouponCreate(logger, couponDAO, companyRepository)
+    couponRepository = new couponRepositoryDatabase(databaseConnection)
+    couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
 })
 
 test("Should do user signup by api", async function(){
@@ -113,4 +117,8 @@ test("Should consume a coupon by api", async function(){
     const outputCouponGetAfterConsume = responseCouponGetAfterConsume.data
 
     expect(outputCouponGetAfterConsume.quantity).toBe(2)
+})
+
+afterEach(async () => {
+    await databaseConnection.close()
 })

@@ -1,4 +1,3 @@
-import CompanyRepository from "../src/CompanyRepositoryDatabase"
 import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase"
 import CouponCreate from "../src/CouponCreate"
 import CouponGet from "../src/CouponGet"
@@ -6,6 +5,8 @@ import LoggerConsole from "../src/LoggerConsole"
 import CompanySignup from "../src/CompanySignup"
 import CouponConsume from "../src/CouponConsume"
 import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
+import DatabaseConnection from "../src/DatabaseConnection"
+import PgPromiseAdapter from "../src/PgPromiseAdapter"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
@@ -14,11 +15,13 @@ let companySignup: CompanySignup
 let logger: LoggerConsole
 let couponRepository: CouponRepositoryDatabase
 let companyRepository: CompanyRepositoryDatabase
+let databaseConnection: DatabaseConnection
 
 beforeEach(() => {
     logger = new LoggerConsole()
-    couponRepository = new CouponRepositoryDatabase()
-    companyRepository = new CompanyRepositoryDatabase()
+    databaseConnection = new PgPromiseAdapter()
+    couponRepository = new CouponRepositoryDatabase(databaseConnection)
+    companyRepository = new CompanyRepositoryDatabase(databaseConnection)
     couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
     couponGet = new CouponGet(couponRepository)
     couponConsume = new CouponConsume(couponRepository)
@@ -68,4 +71,8 @@ test("Should not consume a coupon with a invalid coupon quantity", async functio
     }
     await couponRepository.save(inputCoupon)
     await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
+})
+
+afterEach(async () => {
+    await databaseConnection.close()
 })

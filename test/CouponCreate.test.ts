@@ -4,6 +4,8 @@ import CouponGet from "../src/CouponGet"
 import LoggerConsole from "../src/LoggerConsole"
 import CompanySignup from "../src/CompanySignup"
 import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
+import DatabaseConnection from "../src/DatabaseConnection"
+import PgPromiseAdapter from "../src/PgPromiseAdapter"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
@@ -11,11 +13,13 @@ let companySignup: CompanySignup
 let logger: LoggerConsole
 let couponRepository: CouponRepository
 let companyRepository: CompanyRepositoryDatabase
+let databaseConnection: DatabaseConnection
 
 beforeEach(() => {
     logger = new LoggerConsole()
-    couponRepository = new CouponRepository()
-    companyRepository = new CompanyRepositoryDatabase()
+    databaseConnection = new PgPromiseAdapter()
+    couponRepository = new CouponRepository(databaseConnection)
+    companyRepository = new CompanyRepositoryDatabase(databaseConnection)
     couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
     couponGet = new CouponGet(couponRepository)
     companySignup = new CompanySignup(logger, companyRepository)
@@ -58,4 +62,8 @@ test("Should not create coupon with a company that not exists", async function()
         quantity: 1
     }
     await expect(couponCreate.execute(inputCoupon)).rejects.toThrow(new Error("This company not exists"))
+})
+
+afterEach(async () => {
+    await databaseConnection.close()
 })
