@@ -44,7 +44,7 @@ test("Should add to a coupon", async function(){
     }
     const outputCouponCreate = await couponCreate.execute(inputCoupon)
     const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
-    const outputAddToCoupon = await addToCoupon.execute(outputCouponGet.id, 10)
+    await addToCoupon.execute(outputCouponGet.id, 10)
     const outputCouponGetAfterAddTo = await couponGet.execute(outputCouponGet.id)
 
     expect(outputCouponGetAfterAddTo.quantity).toBe(inputCoupon.quantity + 10)

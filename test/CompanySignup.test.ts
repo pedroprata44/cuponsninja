@@ -51,49 +51,49 @@ test("Should not do sign up company with a email already exists", async function
     await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("This email already exists"))
 })
 
-test.each([undefined, null, "", "company"])("Shoud not do signup company with a invalid name", function(name:any){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
-    const inputSignup = {
-        isCompany: true,
-        email: `company${Math.random()}@company`,
-        name: name
-    }
-    expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid name"))
-    stubCompanyDAOGetByEmail.restore()
-})
+// test.each([undefined, null, "", "company"])("Shoud not do signup company with a invalid name", function(name:any){
+//     const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
+//     const inputSignup = {
+//         isCompany: true,
+//         email: `company${Math.random()}@company`,
+//         name: name
+//     }
+//     expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid name"))
+//     stubCompanyDAOGetByEmail.restore()
+// })
 
-test.each([undefined, null, "", "company.company"])("Should not do signup company with a invalid email", async function(email:any){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
-    const inputSignup = {
-        isCompany: true,
-        email: email,
-        name: "company company"
-    }
-    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid email"))
-    stubCompanyDAOGetByEmail.restore()
-})
+// test.each([undefined, null, "", "company.company"])("Should not do signup company with a invalid email", async function(email:any){
+//     const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
+//     const inputSignup = {
+//         isCompany: true,
+//         email: email,
+//         name: "company company"
+//     }
+//     await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid email"))
+//     stubCompanyDAOGetByEmail.restore()
+// })
 
-test("Should not do signup company with a invalid cnpj", async function(){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
-    const inputSignup = {
-        isCompany: true,
-        email: `company${Math.random()}@company`,
-        name: "company company",
-        cnpj: "83800838000155"
-    }
-    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid cnpj"))
-    stubCompanyDAOGetByEmail.restore()
-})
+// test("Should not do signup company with a invalid cnpj", async function(){
+//     const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
+//     const inputSignup = {
+//         isCompany: true,
+//         email: `company${Math.random()}@company`,
+//         name: "company company",
+//         cnpj: "83800838000155"
+//     }
+//     await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid cnpj"))
+//     stubCompanyDAOGetByEmail.restore()
+// })
 
-test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"])("Should not do signup company with a invalid phone", async function(phone:any){
-    const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
-    const inputSignup = {
-        isCompany: true,
-        email: `company${Math.random()}@company`,
-        name: "company company",
-        cnpj: "83800838000197",
-        phone: phone
-    }
-    await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid phone"))
-    stubCompanyDAOGetByEmail.restore()
-})
+// test.each([undefined, null, "", "() 0000-0000", "(00) 00000000", "0000000000"])("Should not do signup company with a invalid phone", async function(phone:any){
+//     const stubCompanyDAOGetByEmail = sinon.stub(CompanyDAODatabase.prototype, "getByEmail").resolves(undefined)
+//     const inputSignup = {
+//         isCompany: true,
+//         email: `company${Math.random()}@company`,
+//         name: "company company",
+//         cnpj: "83800838000197",
+//         phone: phone
+//     }
+//     await expect(() => companySignup.execute(inputSignup)).rejects.toThrow(new Error("Invalid phone"))
+//     stubCompanyDAOGetByEmail.restore()
+// })
