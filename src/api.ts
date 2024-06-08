@@ -1,4 +1,5 @@
 import express, {Request, Response} from "express"
+import PgPromiseAdapter from "./PgPromiseAdapter"
 import UserSignup from "./UserSignup"
 import UserGetAccount from "./UserGetAccount"
 import UserRepositoryDatabase from "./UserRepositoryDatabase"
@@ -15,8 +16,9 @@ app.use(express.json())
 
 app.post("/signup/user", async function (req: Request, res: Response){
     try{
+        const databaseConnection = new PgPromiseAdapter()
         const input = req.body
-        const userRepository = new UserRepositoryDatabase()
+        const userRepository = new UserRepositoryDatabase(databaseConnection)
         const logger = new LoggerConsole()
         const userSignup = new UserSignup(userRepository, logger)
         const output = await userSignup.execute(input)
@@ -30,7 +32,8 @@ app.post("/signup/user", async function (req: Request, res: Response){
 
 app.get("/accounts/user/:id", async function(req: Request, res: Response){
     const input = req.params.id
-    const userRepository = new UserRepositoryDatabase()
+    const databaseConnection = new PgPromiseAdapter()
+    const userRepository = new UserRepositoryDatabase(databaseConnection)
     const userGetAccount = new UserGetAccount(userRepository)
     const output = await userGetAccount.execute(input)
     res.json(output)
@@ -40,7 +43,8 @@ app.post("/signup/company", async function (req: Request, res: Response){
     try{
         const input = req.body
         const logger = new LoggerConsole()
-        const companyRepository = new CompanyRepositoryDatabase()
+        const databaseConnection = new PgPromiseAdapter()
+        const companyRepository = new CompanyRepositoryDatabase(databaseConnection)
         const companySignup = new CompanySignup(logger, companyRepository)
         const output = await companySignup.execute(input)
         res.json(output)
@@ -53,7 +57,8 @@ app.post("/signup/company", async function (req: Request, res: Response){
 
 app.get("/accounts/company/:id", async function(req: Request, res: Response){
     const input = req.params.id
-    const companyRepository = new CompanyRepositoryDatabase()
+    const databaseConnection = new PgPromiseAdapter()
+    const companyRepository = new CompanyRepositoryDatabase(databaseConnection)
     const companyGetAccount = new CompanyGetAccount(companyRepository)
     const output = await companyGetAccount.execute(input)
     res.json(output)
@@ -63,8 +68,9 @@ app.post("/couponcreate", async function(req: Request, res: Response){
     try{
         const input = req.body
         const logger = new LoggerConsole()
-        const couponRepository = new CouponRepositoryDatabase()
-        const companyRepository = new CompanyRepositoryDatabase()
+        const databaseConnection = new PgPromiseAdapter()
+        const couponRepository = new CouponRepositoryDatabase(databaseConnection)
+        const companyRepository = new CompanyRepositoryDatabase(databaseConnection)
         const couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
         const output = await couponCreate.execute(input)
         res.json(output)
@@ -77,7 +83,8 @@ app.post("/couponcreate", async function(req: Request, res: Response){
 
 app.get("/couponget/:id", async function(req: Request, res: Response){
     const input = req.params.id
-    const couponRepository = new CouponRepositoryDatabase()
+    const databaseConnection = new PgPromiseAdapter()
+    const couponRepository = new CouponRepositoryDatabase(databaseConnection)
     const couponGet = new CouponGet(couponRepository)
     const output = await couponGet.execute(input)
     res.json(output)
@@ -85,7 +92,8 @@ app.get("/couponget/:id", async function(req: Request, res: Response){
 
 app.post("/couponconsume/:id", async function (req: Request, res: Response){
     const id = req.params.id
-    const couponConsume = new CouponConsume(new CouponRepositoryDatabase())
+    const databaseConnection = new PgPromiseAdapter()
+    const couponConsume = new CouponConsume(new CouponRepositoryDatabase(databaseConnection))
     const output = await couponConsume.execute(id)
     res.json(output)
 })
