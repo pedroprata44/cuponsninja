@@ -21,8 +21,8 @@ export default class Coupon{
         return new Coupon(id, createdBy, describe, quantity)
     }
     isInvalidQuantity(quantity: number){
-        if(!quantity) return true
-        return !(quantity > 0)
+        if(typeof quantity != "number") return true
+        return quantity < 0
     }
     isInvalidDescribe(describe: string){
         if(!describe) return true
