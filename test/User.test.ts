@@ -1,4 +1,4 @@
-import User from "../src/User"
+import User from "../src/domain/User"
 
 test("Should create a user", function(){
     const user = User.create("user user", "91015490069", `user@user`, "(99) 9999-9999")

@@ -1,4 +1,4 @@
-import { validateCpf } from "../src/CpfValidator"
+import { validateCpf } from "../src/domain/CpfValidator"
 
 test.each(["320.148.000-22", "851.381.890-93", "45710543004"])("Should test valids cpfs", function(cpf: string){
     expect(validateCpf(cpf)).toBe(true)

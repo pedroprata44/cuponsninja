@@ -1,11 +1,11 @@
-import CompanySignup from "../src/CompanySignup"
-import LoggerConsole from "../src/LoggerConsole"
-import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
-import CompanyDAO from "../src/CompanyRepository"
-import DatabaseConnection from "../src/DatabaseConnection"
-import PgPromiseAdapter from "../src/PgPromiseAdapter"
-import CompanyRepository from "../src/CompanyRepository"
-import CompanyGetAccount from "../src/CompanyGetAccount"
+import CompanyRepositoryDatabase from "../src/infra/repository/CompanyRepositoryDatabase"
+import CompanyDAO from "../src/application/repository/CompanyRepository"
+import DatabaseConnection from "../src/infra/database/DatabaseConnection"
+import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter"
+import CompanyRepository from "../src/application/repository/CompanyRepository"
+import CompanyGetAccount from "../src/application/usecases/company/CompanyGetAccount"
+import CompanySignup from "../src/application/usecases/company/CompanySignup"
+import LoggerConsole from "../src/infra/logger/LoggerConsole"
 
 let companySignup: CompanySignup
 let companyRepository: CompanyRepository

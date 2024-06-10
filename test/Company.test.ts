@@ -1,4 +1,4 @@
-import Company from "../src/Company"
+import Company from "../src/domain/Company"
 
 test("Shoud create a company", function(){
     const company = Company.create("company company", "82.211.946/0001-61", "company@company", "(99) 9999-9999")

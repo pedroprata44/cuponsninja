@@ -1,10 +1,10 @@
-import UserGetAccount from "../src/UserGetAccount"
-import UserSignup from "../src/UserSignup"
-import LoggerConsole from "../src/LoggerConsole"
-import UserRepositoryDatabase from "../src/UserRepositoryDatabase"
-import UserRepository from "../src/UserRepository"
-import PgPromiseAdapter from "../src/PgPromiseAdapter"
-import DatabaseConnection from "../src/DatabaseConnection"
+import UserGetAccount from "../src/application/usecases/user/UserGetAccount"
+import UserSignup from "../src/application/usecases/user/UserSignup"
+import UserRepositoryDatabase from "../src/infra/repository/UserRepositoryDatabase"
+import UserRepository from "../src/application/repository/UserRepository"
+import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter"
+import DatabaseConnection from "../src/infra/database/DatabaseConnection"
+import LoggerConsole from "../src/infra/logger/LoggerConsole"
 
 
 let userSignup: UserSignup

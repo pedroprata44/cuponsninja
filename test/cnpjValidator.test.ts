@@ -1,4 +1,4 @@
-import { validateCnpj } from "../src/CnpjValidator"
+import { validateCnpj } from "../src/domain/CnpjValidator"
 
 test.each(["52.152.639/0001-96","83688872000111"])("Should test valids cnpjs", function(cnpj: string){
     expect(validateCnpj(cnpj)).toBe(true)

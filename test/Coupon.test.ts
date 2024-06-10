@@ -1,4 +1,4 @@
-import Coupon from "../src/Coupon"
+import Coupon from "../src/domain/Coupon"
 
 test("Should create a coupon", function(){
     const coupon = Coupon.create("", "describe", 0)

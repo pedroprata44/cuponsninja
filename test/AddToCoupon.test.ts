@@ -1,12 +1,12 @@
-import AddToCoupon from "../src/AddToCoupon"
-import CompanyRepositoryDatabase from "../src/CompanyRepositoryDatabase"
-import CompanySignup from "../src/CompanySignup"
-import CouponCreate from "../src/CouponCreate"
-import CouponGet from "../src/CouponGet"
-import CouponRepositoryDatabase from "../src/CouponRepositoryDatabase"
-import DatabaseConnection from "../src/DatabaseConnection"
-import LoggerConsole from "../src/LoggerConsole"
-import PgPromiseAdapter from "../src/PgPromiseAdapter"
+import AddToCoupon from "../src/application/usecases/coupon/AddToCoupon"
+import CompanyRepositoryDatabase from "../src/infra/repository/CompanyRepositoryDatabase"
+import CouponRepositoryDatabase from "../src/infra/repository/CouponRepositoryDatabase"
+import DatabaseConnection from "../src/infra/database/DatabaseConnection"
+import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter"
+import CompanySignup from "../src/application/usecases/company/CompanySignup"
+import CouponCreate from "../src/application/usecases/coupon/CouponCreate"
+import CouponGet from "../src/application/usecases/coupon/CouponGet"
+import LoggerConsole from "../src/infra/logger/LoggerConsole"
 
 let couponCreate: CouponCreate
 let couponGet: CouponGet
