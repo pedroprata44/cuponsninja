@@ -1,6 +1,6 @@
-import UserRepository from "./UserRepository"
-import User from "./User"
-import DatabaseConnection from "./DatabaseConnection"
+import UserRepository from "../../application/repository/UserRepository"
+import User from "../../domain/User"
+import DatabaseConnection from "../database/DatabaseConnection"
 
 export default class UserRepositoryDatabase implements UserRepository{
 

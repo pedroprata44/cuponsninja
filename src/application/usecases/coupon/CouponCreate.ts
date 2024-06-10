@@ -1,7 +1,7 @@
-import Logger from "./Logger";
-import CouponRepository from "./CouponRepository";
-import Coupon from "./Coupon";
-import CompanyRepository from "./CompanyRepository";
+import Coupon from "../../../domain/Coupon"
+import Logger from "../../logger/Logger"
+import CompanyRepository from "../../repository/CompanyRepository"
+import CouponRepository from "../../repository/CouponRepository"
 
 export default class CouponCreate{
     constructor(private logger: Logger, private couponRepository: CouponRepository, private companyRepository: CompanyRepository){

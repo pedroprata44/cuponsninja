@@ -1,4 +1,4 @@
-import CouponRepository from "./CouponRepository";
+import CouponRepository from "../../repository/CouponRepository";
 
 export default class AddToCoupon{
     constructor(private couponRepository: CouponRepository){

@@ -1,4 +1,4 @@
-import UserRepository from "./UserRepository"
+import UserRepository from "../../repository/UserRepository"
 
 export default class UserGetAccount{
     userRepository: UserRepository

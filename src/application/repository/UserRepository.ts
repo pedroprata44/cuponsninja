@@ -1,4 +1,4 @@
-import User from "./User"
+import User from "../../domain/User"
 
 export default interface UserRepository{
     save(user: User): Promise<void>

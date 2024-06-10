@@ -1,6 +1,6 @@
-import CouponRepository from "./CouponRepository";
-import Coupon from "./Coupon";
-import DatabaseConnection from "./DatabaseConnection";
+import CouponRepository from "../../application/repository/CouponRepository";
+import Coupon from "../../domain/Coupon";
+import DatabaseConnection from "../database/DatabaseConnection";
 
 export default class CouponRepositoryDatabase implements CouponRepository{
 

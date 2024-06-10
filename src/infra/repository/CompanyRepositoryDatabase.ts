@@ -1,6 +1,6 @@
-import Company from "./Company"
-import CompanyRepository from "./CompanyRepository"
-import DatabaseConnection from "./DatabaseConnection"
+import Company from "../../domain/Company"
+import CompanyRepository from "../../application/repository/CompanyRepository"
+import DatabaseConnection from "../database/DatabaseConnection"
 export default class CompanyRepositoryDatabase implements CompanyRepository{
 
     constructor(readonly connection: DatabaseConnection){

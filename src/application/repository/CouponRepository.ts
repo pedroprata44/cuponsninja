@@ -1,4 +1,4 @@
-import Coupon from "./Coupon"
+import Coupon from "../../domain/Coupon"
 
 export default interface CouponRepository{
     save(coupon:any): Promise<void>

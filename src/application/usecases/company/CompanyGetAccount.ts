@@ -1,4 +1,4 @@
-import CompanyRepository from "./CompanyRepository"
+import CompanyRepository from "../../repository/CompanyRepository"
 export default class CompanyGetAccount{
     companyRepository: CompanyRepository
     constructor(companyRepository: CompanyRepository){

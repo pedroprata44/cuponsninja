@@ -1,6 +1,6 @@
-import Logger from "./Logger"
-import CompanyRepository from "./CompanyRepository"
-import Company from "./Company"
+import Company from "../../../domain/Company"
+import Logger from "../../logger/Logger"
+import CompanyRepository from "../../repository/CompanyRepository"
 
 export default class CompanySignup{
     constructor(private logger: Logger, private companyRepository: CompanyRepository){

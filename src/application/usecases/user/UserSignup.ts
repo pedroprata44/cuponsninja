@@ -1,6 +1,6 @@
-import Logger from "./Logger"
-import UserRepository from "./UserRepository"
-import User from "./User"
+import Logger from "../../logger/Logger"
+import UserRepository from "../../repository/UserRepository"
+import User from "../../../domain/User"
 
 export default class UserSignup{
 
