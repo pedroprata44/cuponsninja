@@ -5,11 +5,11 @@ import DatabaseConnection from "../src/infra/database/DatabaseConnection"
 import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter"
 import CompanySignup from "../src/application/usecases/company/CompanySignup"
 import CouponCreate from "../src/application/usecases/coupon/CouponCreate"
-import CouponGet from "../src/application/usecases/coupon/CouponGet"
+import CouponGetById from "../src/application/usecases/coupon/CouponGetById"
 import LoggerConsole from "../src/infra/logger/LoggerConsole"
 
 let couponCreate: CouponCreate
-let couponGet: CouponGet
+let couponGetById: CouponGetById
 let addToCoupon: AddToCoupon
 let companySignup: CompanySignup
 let logger: LoggerConsole
@@ -23,7 +23,7 @@ beforeEach(() => {
     couponRepository = new CouponRepositoryDatabase(databaseConnection)
     companyRepository = new CompanyRepositoryDatabase(databaseConnection)
     couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
-    couponGet = new CouponGet(couponRepository)
+    couponGetById = new CouponGetById(couponRepository)
     addToCoupon = new AddToCoupon(couponRepository)
     companySignup = new CompanySignup(logger, companyRepository)
 })
@@ -44,9 +44,9 @@ test("Should add to a coupon", async function(){
         quantity: 2
     }
     const outputCouponCreate = await couponCreate.execute(inputCoupon)
-    const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
+    const outputCouponGet = await couponGetById.execute(outputCouponCreate.couponId)
     await addToCoupon.execute(outputCouponGet.id, 10)
-    const outputCouponGetAfterAddTo = await couponGet.execute(outputCouponGet.id)
+    const outputCouponGetAfterAddTo = await couponGetById.execute(outputCouponGet.id)
 
     expect(outputCouponGetAfterAddTo.quantity).toBe(inputCoupon.quantity + 10)
 })

@@ -5,11 +5,11 @@ import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter"
 import CompanySignup from "../src/application/usecases/company/CompanySignup"
 import CouponConsume from "../src/application/usecases/coupon/CouponConsume"
 import CouponCreate from "../src/application/usecases/coupon/CouponCreate"
-import CouponGet from "../src/application/usecases/coupon/CouponGet"
+import CouponGetById from "../src/application/usecases/coupon/CouponGetById"
 import LoggerConsole from "../src/infra/logger/LoggerConsole"
 
 let couponCreate: CouponCreate
-let couponGet: CouponGet
+let couponGetById: CouponGetById
 let couponConsume: CouponConsume
 let companySignup: CompanySignup
 let logger: LoggerConsole
@@ -23,7 +23,7 @@ beforeEach(() => {
     couponRepository = new CouponRepositoryDatabase(databaseConnection)
     companyRepository = new CompanyRepositoryDatabase(databaseConnection)
     couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
-    couponGet = new CouponGet(couponRepository)
+    couponGetById = new CouponGetById(couponRepository)
     couponConsume = new CouponConsume(couponRepository)
     companySignup = new CompanySignup(logger, companyRepository)
 })
@@ -43,9 +43,9 @@ test("Should consume a coupon", async function(){
         quantity: 2
     }
     const outputCouponCreate = await couponCreate.execute(inputCoupon)
-    const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
+    const outputCouponGet = await couponGetById.execute(outputCouponCreate.couponId)
     await couponConsume.execute(outputCouponGet.id)
-    const couponConsumed = await couponGet.execute(outputCouponCreate.couponId)
+    const couponConsumed = await couponGetById.execute(outputCouponCreate.couponId)
     expect(couponConsumed.quantity).toBe(outputCouponGet.quantity - 1)
 })
 
