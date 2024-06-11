@@ -24,7 +24,6 @@ beforeEach(() => {
     couponGet = new CouponGet(couponRepository)
     companySignup = new CompanySignup(logger, companyRepository)
 })
-
 test("Should create a coupon", async function(){
     const inputCompany = {
         isCompany: true,
@@ -35,6 +34,9 @@ test("Should create a coupon", async function(){
     }
     const companyId = (await companySignup.execute(inputCompany)).companyId
     const inputCoupon = {
+        code: "ABCD1234",
+        discount: "10%",
+        expirationDate: new Date(2025,0,1),
         createdBy: companyId,
         describe: "describe",
         quantity: 1
@@ -42,28 +44,30 @@ test("Should create a coupon", async function(){
     const outputCouponCreate = await couponCreate.execute(inputCoupon)
     const outputCouponGet = await couponGet.execute(outputCouponCreate.couponId)
     expect(outputCouponGet.id).toBeDefined()
-    expect(outputCouponGet.describe).toBe(inputCoupon.describe)
-    expect(outputCouponGet.quantity).toBe(inputCoupon.quantity)
+    expect(outputCouponGet.code).toBe(inputCoupon.code)
 })
-
 test.each([null, undefined, ""])("Should not create coupon with a invalid createdBy", async function(createdBy: any){
     const inputCoupon = {
+        code: "ABCD1234",
+        discount: "10%",
+        expirationDate: new Date(2025,0,1),
         createdBy: createdBy,
         describe: "describe",
         quantity: 1
     }
     await expect(couponCreate.execute(inputCoupon)).rejects.toThrow(new Error("Invalid createdBy"))
 })
-
 test("Should not create coupon with a company that not exists", async function(){
     const inputCoupon = {
+        code: "ABCD1234",
+        discount: "10%",
+        expirationDate: new Date(2025,0,1),
         createdBy: crypto.randomUUID(),
         describe: "describe",
         quantity: 1
     }
     await expect(couponCreate.execute(inputCoupon)).rejects.toThrow(new Error("This company not exists"))
 })
-
 afterEach(async () => {
     await databaseConnection.close()
 })

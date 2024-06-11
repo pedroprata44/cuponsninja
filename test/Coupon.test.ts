@@ -11,8 +11,8 @@ test.each([null, undefined, "", "ABCD"])("Should not create a coupon with a inva
 test.each([null, undefined, "", "%", "10"])("Should not create a coupon with a invalid discount", function(discount: any){
     expect(() => Coupon.create("ABCD1234", discount, new Date(), "", ".", 1)).toThrow(new Error("Invalid discount"))
 })
-test.each([null, undefined, "", new Date(2022)])("Should not create a coupon with a invalid valid date", function(validDate: any){
-    expect(() => Coupon.create("ABCD1234", "10%", validDate, "", ".", 1)).toThrow(new Error("Invalid valid date"))
+test.each([null, undefined, "", new Date(2022)])("Should not create a coupon with a invalid expiration date", function(expiration_date: any){
+    expect(() => Coupon.create("ABCD1234", "10%", expiration_date, "", ".", 1)).toThrow(new Error("Invalid expiration date"))
 })
 test.each([undefined, null, "", "cccccccccccccccccccccccccccccc"])("Should not create a coupon with a invalid describe", function(describe: any){
     expect(() => new Coupon(crypto.randomUUID(), "ABCD1234", "10%", new Date(), "", describe, 1)).toThrow(new Error("Invalid describe"))
