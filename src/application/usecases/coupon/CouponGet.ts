@@ -10,4 +10,9 @@ export default class CouponGet{
         if(!coupon) throw new Error("This coupon doesn't exists") 
         return coupon
     }
+    async getByCode(couponCode: string){
+        const coupon = await this.couponRepository.getByCode(couponCode)
+        if(!coupon) throw new Error("This coupon doesn't exists")
+        return coupon
+    }
 }

@@ -7,11 +7,11 @@ export default class CouponCreate{
     constructor(private logger: Logger, private couponRepository: CouponRepository, private companyRepository: CompanyRepository){
     }
     async execute(input: Input): Promise<Output>{
-        this.logger.log(`${input.describe} ${input.quantity}`)
+        this.logger.log(`${input.code} ${input.describe} ${input.quantity}`)
         if(this.isInvalidCreatedBy(input.createdBy)) throw new Error("Invalid createdBy") 
         const existingCompany = await this.companyRepository.getById(input.createdBy)
         if(!existingCompany) throw new Error("This company not exists")
-        const coupon = Coupon.create(input.createdBy, input.describe, input.quantity)
+        const coupon = Coupon.create(input.code, input.discount, input.expirationDate, input.createdBy, input.describe, input.quantity)
         await this.couponRepository.save(coupon)
         return{
             couponId: coupon.id
@@ -22,6 +22,9 @@ export default class CouponCreate{
     }
 }
 type Input = {
+    code: string,
+    discount: string,
+    expirationDate: Date,
     createdBy: string,
     describe: string,
     quantity: number
