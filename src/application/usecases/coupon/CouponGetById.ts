@@ -1,6 +1,6 @@
 import CouponRepository from "../../repository/CouponRepository"
 
-export default class CouponGet{
+export default class CouponGetById{
     couponRepository: CouponRepository
     constructor(couponRepository:CouponRepository){
         this.couponRepository = couponRepository
@@ -8,11 +8,6 @@ export default class CouponGet{
     async execute(couponId: string){
         const coupon = await this.couponRepository.getById(couponId)
         if(!coupon) throw new Error("This coupon doesn't exists") 
-        return coupon
-    }
-    async getByCode(couponCode: string){
-        const coupon = await this.couponRepository.getByCode(couponCode)
-        if(!coupon) throw new Error("This coupon doesn't exists")
         return coupon
     }
 }
