@@ -6,6 +6,7 @@ import CompanySignup from "../src/application/usecases/company/CompanySignup"
 import CouponCreate from "../src/application/usecases/coupon/CouponCreate"
 import CouponGetById from "../src/application/usecases/coupon/CouponGetById"
 import LoggerConsole from "../src/infra/logger/LoggerConsole"
+import sinon from "sinon"
 
 let couponCreate: CouponCreate
 let couponGetById: CouponGetById
@@ -24,7 +25,10 @@ beforeEach(() => {
     couponGetById = new CouponGetById(couponRepository)
     companySignup = new CompanySignup(logger, companyRepository)
 })
+test("test", async function(){
+})
 test("Should create a coupon", async function(){
+    const stubCouponGetByCode = sinon.stub(CouponRepository.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -45,6 +49,8 @@ test("Should create a coupon", async function(){
     const outputCouponGet = await couponGetById.execute(outputCouponCreate.couponId)
     expect(outputCouponGet.id).toBeDefined()
     expect(outputCouponGet.code).toBe(inputCoupon.code)
+
+    stubCouponGetByCode.restore()
 })
 test.each([null, undefined, ""])("Should not create coupon with a invalid createdBy", async function(createdBy: any){
     const inputCoupon = {
