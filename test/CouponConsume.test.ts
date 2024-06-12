@@ -7,6 +7,7 @@ import CouponConsume from "../src/application/usecases/coupon/CouponConsume"
 import CouponCreate from "../src/application/usecases/coupon/CouponCreate"
 import CouponGetById from "../src/application/usecases/coupon/CouponGetById"
 import LoggerConsole from "../src/infra/logger/LoggerConsole"
+import sinon from "sinon"
 
 let couponCreate: CouponCreate
 let couponGetById: CouponGetById
@@ -29,6 +30,7 @@ beforeEach(() => {
 })
 
 test("Should consume a coupon", async function(){
+    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -38,6 +40,9 @@ test("Should consume a coupon", async function(){
     }
     const companyId = (await companySignup.execute(inputCompany)).companyId
     const inputCoupon = {
+        code: "ABCD1234",
+        discount: "10%",
+        expirationDate: new Date(2050,0,1),
         createdBy: companyId,
         describe: "describe",
         quantity: 2
@@ -47,6 +52,8 @@ test("Should consume a coupon", async function(){
     await couponConsume.execute(outputCouponGet.id)
     const couponConsumed = await couponGetById.execute(outputCouponCreate.couponId)
     expect(couponConsumed.quantity).toBe(outputCouponGet.quantity - 1)
+
+    stubCouponGetByCode.restore()
 })
 
 test("Should not consume a coupon with a invalid coupon id", async function(){
@@ -54,6 +61,7 @@ test("Should not consume a coupon with a invalid coupon id", async function(){
 })
 
 test("Should not consume a coupon with a invalid coupon quantity", async function(){
+    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -63,14 +71,16 @@ test("Should not consume a coupon with a invalid coupon quantity", async functio
     }
     const companyId = (await companySignup.execute(inputCompany)).companyId
     const inputCoupon = {
-        id: crypto.randomUUID(),
+        code: "ABCD1234",
+        discount: "10%",
+        expirationDate: new Date(2050,0,1),
         createdBy: companyId,
         describe: "describe",
-        quantity: 0,
-        creationDate: Date.call("")
+        quantity: 0
     }
-    await couponRepository.save(inputCoupon)
-    await expect(() => couponConsume.execute(inputCoupon.id)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
+    const outputCreateCoupon = await couponCreate.execute(inputCoupon)
+    await expect(() => couponConsume.execute(outputCreateCoupon.couponId)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
+    stubCouponGetByCode.restore()
 })
 
 afterEach(async () => {

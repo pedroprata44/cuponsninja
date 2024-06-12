@@ -1,4 +1,4 @@
-import CouponRepository from "../src/infra/repository/CouponRepositoryDatabase"
+import CouponRepositoryDatabase from "../src/infra/repository/CouponRepositoryDatabase"
 import CompanyRepositoryDatabase from "../src/infra/repository/CompanyRepositoryDatabase"
 import DatabaseConnection from "../src/infra/database/DatabaseConnection"
 import PgPromiseAdapter from "../src/infra/database/PgPromiseAdapter"
@@ -12,14 +12,14 @@ let couponCreate: CouponCreate
 let couponGetById: CouponGetById
 let companySignup: CompanySignup
 let logger: LoggerConsole
-let couponRepository: CouponRepository
+let couponRepository: CouponRepositoryDatabase
 let companyRepository: CompanyRepositoryDatabase
 let databaseConnection: DatabaseConnection
 
 beforeEach(() => {
     logger = new LoggerConsole()
     databaseConnection = new PgPromiseAdapter()
-    couponRepository = new CouponRepository(databaseConnection)
+    couponRepository = new CouponRepositoryDatabase(databaseConnection)
     companyRepository = new CompanyRepositoryDatabase(databaseConnection)
     couponCreate = new CouponCreate(logger, couponRepository, companyRepository)
     couponGetById = new CouponGetById(couponRepository)
@@ -28,7 +28,7 @@ beforeEach(() => {
 test("test", async function(){
 })
 test("Should create a coupon", async function(){
-    const stubCouponGetByCode = sinon.stub(CouponRepository.prototype, "getByCode").resolves(undefined)
+    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
