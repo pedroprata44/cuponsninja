@@ -11,6 +11,8 @@ export default class CouponCreate{
         if(this.isInvalidCreatedBy(input.createdBy)) throw new Error("Invalid createdBy") 
         const existingCompany = await this.companyRepository.getById(input.createdBy)
         if(!existingCompany) throw new Error("This company not exists")
+        const existingCoupon = await this.couponRepository.getByCode(input.code)
+        if(existingCoupon) throw new Error("This code coupon already exists")
         const coupon = Coupon.create(input.code, input.discount, input.expirationDate, input.createdBy, input.describe, input.quantity)
         await this.couponRepository.save(coupon)
         return{
