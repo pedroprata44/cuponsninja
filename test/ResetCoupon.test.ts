@@ -7,6 +7,7 @@ import CouponCreate from "../src/application/usecases/coupon/CouponCreate"
 import CouponGetById from "../src/application/usecases/coupon/CouponGetById"
 import ResetCoupon from "../src/application/usecases/coupon/ResetCoupon"
 import LoggerConsole from "../src/infra/logger/LoggerConsole"
+import sinon from "sinon"
 
 let couponCreate: CouponCreate
 let couponGetById: CouponGetById
@@ -29,6 +30,7 @@ beforeEach(() => {
 })
 
 test("Should reset a coupon", async function(){
+    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -38,6 +40,9 @@ test("Should reset a coupon", async function(){
     }
     const companyId = (await companySignup.execute(inputCompany)).companyId
     const inputCoupon = {
+        code: "ABCD1234",
+        discount: "10%",
+        expirationDate: new Date(2050,0,1),
         createdBy: companyId,
         describe: "describe",
         quantity: 2
@@ -46,6 +51,7 @@ test("Should reset a coupon", async function(){
     const outputResetCoupon = await resetCoupon.execute(outputCouponCreate.couponId)
     const outputCouponGet = await couponGetById.execute(outputResetCoupon.couponId)
     expect(outputCouponGet.quantity).toBe(0)
+    stubCouponGetByCode.restore()
 })
 
 afterEach(async () => {

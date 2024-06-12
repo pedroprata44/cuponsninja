@@ -7,6 +7,7 @@ import CompanySignup from "../src/application/usecases/company/CompanySignup"
 import CouponCreate from "../src/application/usecases/coupon/CouponCreate"
 import CouponGetById from "../src/application/usecases/coupon/CouponGetById"
 import LoggerConsole from "../src/infra/logger/LoggerConsole"
+import sinon from "sinon"
 
 let couponCreate: CouponCreate
 let couponGetById: CouponGetById
@@ -30,6 +31,7 @@ beforeEach(() => {
 
 
 test("Should add to a coupon", async function(){
+    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -39,6 +41,9 @@ test("Should add to a coupon", async function(){
     }
     const companyId = (await companySignup.execute(inputCompany)).companyId
     const inputCoupon = {
+        code: "ABCD1234",
+        discount: "10%",
+        expirationDate: new Date(2050,0,1),
         createdBy: companyId,
         describe: "describe",
         quantity: 2
