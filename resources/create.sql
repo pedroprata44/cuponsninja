@@ -39,7 +39,7 @@ drop table data.coupon
 create table data.sell(
     id uuid primary key,
     user_id uuid,
-    coupon_code text not null,
+    coupon_id text not null,
     date timestamp
 )
 select * from data.sell
