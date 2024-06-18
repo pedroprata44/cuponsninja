@@ -30,7 +30,6 @@ beforeEach(() => {
 })
 
 test("Should reset a coupon", async function(){
-    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -51,7 +50,6 @@ test("Should reset a coupon", async function(){
     const outputResetCoupon = await resetCoupon.execute(outputCouponCreate.couponId)
     const outputCouponGet = await couponGetById.execute(outputResetCoupon.couponId)
     expect(outputCouponGet.quantity).toBe(0)
-    stubCouponGetByCode.restore()
 })
 
 afterEach(async () => {

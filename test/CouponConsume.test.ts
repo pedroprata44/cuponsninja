@@ -30,7 +30,6 @@ beforeEach(() => {
 })
 
 test("Should consume a coupon", async function(){
-    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -53,7 +52,6 @@ test("Should consume a coupon", async function(){
     const couponConsumed = await couponGetById.execute(outputCouponCreate.couponId)
     expect(couponConsumed.quantity).toBe(outputCouponGet.quantity - 1)
 
-    stubCouponGetByCode.restore()
 })
 
 test("Should not consume a coupon with a invalid coupon id", async function(){
@@ -61,7 +59,6 @@ test("Should not consume a coupon with a invalid coupon id", async function(){
 })
 
 test("Should not consume a coupon with a invalid coupon quantity", async function(){
-    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -80,7 +77,6 @@ test("Should not consume a coupon with a invalid coupon quantity", async functio
     }
     const outputCreateCoupon = await couponCreate.execute(inputCoupon)
     await expect(() => couponConsume.execute(outputCreateCoupon.couponId)).rejects.toThrow(new Error("This coupon doesn't have enough quantity to be consumed"))
-    stubCouponGetByCode.restore()
 })
 
 afterEach(async () => {

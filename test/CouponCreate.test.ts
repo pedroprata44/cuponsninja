@@ -28,7 +28,6 @@ beforeEach(() => {
 test("test", async function(){
 })
 test("Should create a coupon", async function(){
-    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
@@ -50,7 +49,6 @@ test("Should create a coupon", async function(){
     expect(outputCouponGet.id).toBeDefined()
     expect(outputCouponGet.code).toBe(inputCoupon.code)
 
-    stubCouponGetByCode.restore()
 })
 test.each([null, undefined, ""])("Should not create coupon with a invalid createdBy", async function(createdBy: any){
     const inputCoupon = {

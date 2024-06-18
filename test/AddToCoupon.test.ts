@@ -31,7 +31,6 @@ beforeEach(() => {
 
 
 test("Should add to a coupon", async function(){
-    const stubCouponGetByCode = sinon.stub(CouponRepositoryDatabase.prototype, "getByCode").resolves(undefined)
     const inputCompany = {
         isCompany: true,
         name: "company company",
