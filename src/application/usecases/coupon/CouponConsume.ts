@@ -16,7 +16,12 @@ export default class CouponConsume{
         await this.couponRepository.update(coupon.quantity, coupon.id)
         const sell = Sell.create(coupon.id, user.id)
         await this.sellRepository.save(sell)    
-        return sell
+        return {
+            id: sell.id,
+            couponId: sell.couponId,
+            userId: sell.userId,
+            date: sell.date
+        }
     }
 }
 type Input = {
