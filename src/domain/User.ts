@@ -18,11 +18,11 @@ export default class User{
         this.phone = phone
         this.dateSignup = Date.call("")
     }
-    static create(name: Name, cpf: Cpf, email: Email, phone: Phone){
+    static create(name: string, cpf: string, email: string, phone: string){
         const id = crypto.randomUUID()
-        return new User(id, name, cpf, email, phone)
+        return new User(id, new Name(name), new Cpf(cpf), new Email(email), new Phone(phone))
     }
-    static restore(id: string, name: Name, cpf: Cpf, email: Email, phone: Phone){
-        return new User(id, name, cpf, email, phone)
+    static restore(id: string, name: string, cpf: string, email: string, phone: string){
+        return new User(id, new Name(name), new Cpf(cpf), new Email(email), new Phone(phone))
     }
 }

@@ -8,7 +8,7 @@ export default class UserRepositoryDatabase implements UserRepository{
     }
 
     async save(user: any){
-        await this.connection.query("insert into data.user_account (name, email, cpf, phone, id, datesignup) values ($1, $2, $3, $4, $5, $6)", [user.name, user.email, user.cpf, user.phone, user.id, user.dateSignup])
+        await this.connection.query("insert into data.user_account (name, email, cpf, phone, id, datesignup) values ($1, $2, $3, $4, $5, $6)", [user.name.value, user.email.value, user.cpf.value, user.phone.value, user.id, user.dateSignup])
     }
     async getById(userId: string): Promise<User | undefined>{
         const [user] = await this.connection.query("select * from data.user_account where id = $1", [userId])

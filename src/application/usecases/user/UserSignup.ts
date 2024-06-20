@@ -18,14 +18,12 @@ export default class UserSignup{
         }
     }
 }
-
 type Input = {
     name: string,
     cpf: string,
     email: string,
     phone: string
 }
-
 type Output = {
     userId: string
 }
